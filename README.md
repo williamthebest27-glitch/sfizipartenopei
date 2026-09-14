@@ -36,7 +36,10 @@ un buco, e nessuna richiesta che finirebbe 404.
 
 ## Pubblicazione
 
-Il sito è su Vercel, progetto `sfizi-partenopei`. Da dentro questa cartella:
+Il sito è su Vercel, progetto `sfizi-partenopei`, collegato a questo
+repository: **ogni push su `main` va in produzione da solo**.
+
+Per pubblicare a mano senza passare da un commit, da dentro questa cartella:
 
 ```bash
 vercel --prod
