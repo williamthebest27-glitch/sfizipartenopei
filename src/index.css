@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/* I token diventano utility Tailwind: bg-blu-500, text-blu-950, font-display.
+   Unica fonte di verita per la palette della hero. */
+@theme {
+  /* --- Ramp blu della hero ---------------------------------------------
+     Tutta derivata dal blu del logo #0DA9DC (hsl 195 89% 46%): stessa tinta,
+     luminosita diversa. #0DA9DC e #0A84AC sono i due blu gia usati dal sito
+     live, gli altri gradini li estendono verso il navy e verso la luce.
+
+     Contrasto su bianco (WCAG):
+       blu-950 14.0:1  blu-800 8.9:1  blu-700 7.0:1  -> testo corrente
+       blu-600  4.3:1                                -> titoli e label >=18px
+       blu-500  2.7:1                                -> MAI testo, solo segno
+     Il blu del marchio resta il protagonista visivo ma non porta mai testo
+     piccolo: quello lo fanno blu-700 e blu-950.                          */
+  --color-blu-50: #F2FAFD;
+  --color-blu-100: #E2F4FB;
+  --color-blu-200: #C2E9F7;
+  --color-blu-300: #8FD8F1;
+  --color-blu-400: #4FC6EE;
+  --color-blu-500: #0DA9DC;
+  --color-blu-600: #0A84AC;
+  --color-blu-700: #0B5F83;
+  --color-blu-800: #0B4A64;
+  --color-blu-900: #0A3A4C;
+  --color-blu-950: #072937;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Geist", "Helvetica Neue", Arial, sans-serif;
+  /* serif ad alto contrasto per la seconda riga del marchio */
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  /* corsivo per gli accenti scritti a mano */
+  --font-script: "Sacramento", "Segoe Script", cursive;
+
+  --ease-hero: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* NIENTE scroll-behavior: smooth qui. Con una sezione in pin ScrollTrigger
+     regola lo scroll da solo, e lo scroll morbido del browser si mette in
+     mezzo: misurato, provocava un salto di layout da 0,625 di CLS all'aggancio
+     e allo sgancio del pin. L'ancora della hero fa lo scroll morbido da JS,
+     solo al clic. */
+}
+
+body {
+  margin: 0;
+  /* bianco: e il fondo della hero, ed e anche il colore che si vede
+     nell'overscroll, sopra e sotto. */
+  background: #ffffff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blu-600);
+  outline-offset: 4px;
+}
+
+/* Con prefers-reduced-motion il carosello della hero non parte: GSAP non gira
+   e senza queste regole le scene 2 e 3 resterebbero visibili impilate sulla
+   prima. Qui la hero diventa una scena statica, completa e leggibile. */
+@media (prefers-reduced-motion: reduce) {
+  [data-alt] {
+    display: none !important;
+  }
+
+  /* Senza carosello la vetrina non ha bisogno delle tre schermate di corsa:
+     l'altezza in linea la mette il componente, qui la riporto a una sola
+     schermata cosi non restano due viewport di scroll a vuoto. */
+  [data-vetrina] {
+    height: 100svh !important;
+  }
+}

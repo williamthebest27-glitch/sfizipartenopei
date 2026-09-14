@@ -1,0 +1,5 @@
+# Normalizza i fine riga nel repository: evita diff rumorosi fra Windows e il
+# resto del mondo.
+* text=auto eol=lf
+*.png binary
+*.webp binary

@@ -1,0 +1,7 @@
+# Vercel ricostruisce da sorgente: non serve caricare il build locale
+dist
+node_modules
+
+# .env.local contiene il token OIDC creato da `vercel link`: non va caricato
+.env.local
+.env*.local

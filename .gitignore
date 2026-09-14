@@ -1,0 +1,16 @@
+# dipendenze e build
+node_modules
+dist
+
+# Vercel: project.json e soprattutto .env.local, che contiene il token OIDC
+.vercel
+.env
+.env.*
+
+# sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# configurazione dell assistente, non serve al progetto
+.claude
