@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { MailGlyph } from "./glyphs.jsx";
+import Marchio from "./Marchio.jsx";
 import { quandoEntraIlSito } from "../lib/intro.js";
 
 /* ===========================================================================
@@ -33,9 +34,11 @@ const NAV = [
   { label: "Contatti", short: "Contatti", href: "contatti.html" },
 ];
 
-/* Copia locale del marchio: il CDN di Webador non e una dipendenza che vale la
-   pena tenersi, e in anteprima pubblicata sarebbe comunque bloccato. */
-const LOGO = "img/logo.webp";
+/* Il marchio nella barra e lo stesso disegno vettoriale del sipario
+   (components/Marchio.jsx), non piu il raster da 240px: a 40px il PNG era
+   impastato sui tratti sottili del fritto, e su uno schermo retina anche di
+   piu. Qui e in blu-950, il colore dei titoli: sul bianco della barra il blu
+   del marchio da solo 2,7:1, e un segno cosi piccolo ha bisogno di stacco. */
 
 function PhoneGlyph() {
   return (
@@ -168,16 +171,10 @@ export default function SiteHeader({ current = "index.html" }) {
             <a
               href="index.html"
               data-head-item
-              className="flex items-center gap-3 rounded-sm mix-blend-multiply"
+              className="flex items-center gap-3 rounded-sm"
               aria-label="Sfizi Partenopei, torna alla home"
             >
-              <img
-                src={LOGO}
-                alt=""
-                width="240"
-                height="240"
-                className="h-10 w-10 sm:h-11 sm:w-11"
-              />
+              <Marchio className="h-9 w-auto text-blu-950 sm:h-10" />
               <span className="hidden font-body text-[0.72rem] font-semibold tracking-[0.18em] text-blu-950 uppercase lg:block">
                 Sfizi Partenopei
               </span>
