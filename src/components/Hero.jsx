@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { quandoEntraIlSito } from "../lib/intro.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -216,7 +217,11 @@ export default function Hero() {
         gsap.set(q("[data-note]"), { opacity: 0, y: 14 });
         gsap.set(one("[data-cue]"), { opacity: 0 });
 
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.1 });
+        /* In pausa: la fa partire il sipario quando comincia a dissolversi
+           (lib/intro.js). Senza questo, l'entrata si consumerebbe dietro al
+           telo blu e alla fine del preloader la hero sarebbe gia composta.
+           Sulle pagine senza sipario il semaforo e verde e parte subito. */
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
 
         /* 1 · il titolo */
         tl.to(q("[data-eyebrow-line]"), { scaleX: 1, duration: 0.7, ease: "power2.inOut" }, 0)
@@ -239,13 +244,29 @@ export default function Hero() {
           .to(one("[data-cue]"), { opacity: 1, duration: 0.7 }, 2.3);
 
         const dot = one("[data-cue-dot]");
-        if (dot) {
-          gsap.fromTo(
-            dot,
-            { y: 0, opacity: 1 },
-            { y: 11, opacity: 0, duration: 1.4, repeat: -1, repeatDelay: 0.3, ease: "power1.in", delay: 2.6 }
-          );
-        }
+        const goccia = dot
+          ? gsap.fromTo(
+              dot,
+              { y: 0, opacity: 1 },
+              {
+                y: 11,
+                opacity: 0,
+                duration: 1.4,
+                repeat: -1,
+                repeatDelay: 0.3,
+                ease: "power1.in",
+                delay: 2.6,
+                paused: true,
+              }
+            )
+          : null;
+
+        const stacca = quandoEntraIlSito(() => {
+          tl.play();
+          goccia?.play();
+        });
+
+        return () => stacca();
       });
 
       /* --- parallasse verso la sezione successiva --------------------------

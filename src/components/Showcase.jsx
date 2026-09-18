@@ -34,8 +34,9 @@ ScrollTrigger.config({ ignoreMobileResize: true });
 const TEL = "+41784065676";
 const TEL_LABEL = "078 406 56 76";
 
-/* Le tre foto in PNG ritagliato fornite dal cliente, convertite in WebP con
-   alpha (1200w + 680w) in public/img. */
+/* Le tre scene usano le stesse fotografie della pagina prodotti, non copie
+   diverse dello stesso piatto: sono i file scontornati in public/img/prodotti.
+   Le misure w/h sono quelle vere del file, servono a riservare lo spazio. */
 const SCENES = [
   {
     id: "fritto",
@@ -43,23 +44,27 @@ const SCENES = [
     name: "Calzoncino fritto",
     price: "5.00",
     kicker: "Sfizi Partenopei",
-    img: "img/calzoncino.webp",
-    imgSm: "img/calzoncino-sm.webp",
-    w: 1200,
-    h: 837,
+    img: "img/prodotti/calzoncino-fritto.webp",
+    imgSm: "img/prodotti/calzoncino-fritto-sm.webp",
+    w: 895,
+    h: 575,
     ink: "text-blu-600",
     rest: -8,
   },
   {
     id: "zucchine",
     word: "Zucchine",
-    name: "Cotto, mozzarella e zucchine",
-    price: "9.00",
-    kicker: "Paninoteca",
-    img: "img/zucchine.webp",
-    imgSm: "img/zucchine-sm.webp",
-    w: 1200,
-    h: 751,
+    /* Qui prima c'era "Cotto, mozzarella e zucchine", che nel menu del cliente
+       non esiste: era un'ipotesi rimasta in vetrina. Il Giovannino esiste, sta
+       fra gli sfizi a 8.00, e nella sua fotografia le zucchine sono la cosa
+       che si vede per prima. */
+    name: "Giovannino crudo e provola",
+    price: "8.00",
+    kicker: "Sfizi Partenopei",
+    img: "img/prodotti/giovannino.webp",
+    imgSm: "img/prodotti/giovannino-sm.webp",
+    w: 979,
+    h: 690,
     ink: "text-blu-800",
     rest: 6,
   },
@@ -69,8 +74,8 @@ const SCENES = [
     name: "Salsiccia e provola",
     price: "9.00",
     kicker: "Paninoteca",
-    img: "img/pesto.webp",
-    imgSm: "img/pesto-sm.webp",
+    img: "img/prodotti/salsiccia-provola.webp",
+    imgSm: "img/prodotti/salsiccia-provola-sm.webp",
     w: 1200,
     h: 767,
     ink: "text-blu-700",

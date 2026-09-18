@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { MailGlyph } from "./glyphs.jsx";
+import { quandoEntraIlSito } from "../lib/intro.js";
 
 /* ===========================================================================
    SiteHeader — barra fissa in cima, condivisa da tutte le schermate
@@ -109,7 +110,7 @@ export default function SiteHeader({ current = "index.html" }) {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const items = el.querySelectorAll("[data-head-item]");
         gsap.set(items, { opacity: 0, y: -14 });
-        gsap.to(items, {
+        const entrata = gsap.to(items, {
           opacity: 1,
           y: 0,
           duration: 0.9,
@@ -119,7 +120,15 @@ export default function SiteHeader({ current = "index.html" }) {
              1,35s e il punto in cui la hero ha finito il titolo e la
              fotografia e a meta dissolvenza. */
           delay: 1.35,
+          /* Sulla home il via lo da il sipario, nell'istante in cui comincia a
+             dissolversi: il ritardo di 1,35s va contato da li, non dal
+             montaggio, altrimenti il menu entrerebbe dietro al telo. Sulle
+             pagine interne, che il sipario non ce l'hanno, parte subito. */
+          paused: true,
         });
+
+        const stacca = quandoEntraIlSito(() => entrata.play());
+        return () => stacca();
       });
     }, root);
 

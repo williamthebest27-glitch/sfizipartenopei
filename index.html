@@ -11,8 +11,32 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Geist:wght@100..900&family=Playfair+Display:wght@500..800&family=Sacramento&display=swap">
+<style>
+  /* Il sipario del preloader, dipinto prima che React monti: senza, il primo
+     fotogramma sarebbe bianco e il blu arriverebbe mezzo secondo dopo, che si
+     vede benissimo. Appena monta, Sipario.jsx toglie questo nodo e disegna lo
+     stesso fondo: il cambio non e percepibile.
+     ATTENZIONE: il gradiente e ripetuto uguale in src/components/Sipario.jsx.
+
+     L'animazione di scampo e l'ultima rete di sicurezza: se il JS non parte
+     affatto, dopo dodici secondi il telo se ne va da solo invece di lasciare
+     uno schermo blu per sempre. L'intro piena, con l'attesa degli asset al
+     massimo, non arriva a otto. */
+  #sipario-iniziale {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: radial-gradient(118% 88% at 50% 42%, #23BDEC 0%, #0DA9DC 30%, #0A84AC 58%, #0B4A64 100%);
+    animation: sipario-scampo 0.6s linear 12s forwards;
+  }
+
+  @keyframes sipario-scampo {
+    to { opacity: 0; visibility: hidden; }
+  }
+</style>
 </head>
 <body>
+<div id="sipario-iniziale"></div>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
 </body>

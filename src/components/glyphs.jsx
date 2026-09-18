@@ -154,6 +154,13 @@ export function CategoryGlyph({ kind, className, weight = 1.15 }) {
           <path d="M3.6 10.2h16.8M4.6 13.4h14.8M3.6 16.2h16.8c0 1.8-3.8 2.8-8.4 2.8s-8.4-1-8.4-2.8Z" {...s} />
         </>
       )}
+      {kind === "drink" && (
+        <>
+          {/* bottiglia: collo, spalla, corpo */}
+          <path d="M10 3.2h4M10.6 3.2v3L8.6 9.4a3 3 0 0 0-.4 1.5v7.3a2 2 0 0 0 2 2h3.6a2 2 0 0 0 2-2v-7.3a3 3 0 0 0-.4-1.5l-2-3.2v-3" {...s} />
+          <path d="M8.3 13.4h7.4" {...s} />
+        </>
+      )}
     </svg>
   );
 }

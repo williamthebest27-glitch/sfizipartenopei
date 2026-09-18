@@ -38,6 +38,14 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+
+  /* La barra di scorrimento e sempre prenotata. Serve al sipario: mentre e in
+     scena lo scroll e bloccato (overflow: hidden), e senza questa riga la barra
+     sparirebbe e riapparirebbe, allargando e restringendo la pagina di 15px
+     proprio nell'istante in cui il telo si alza — un salto di layout gratis,
+     visibile e contato nel CLS. Sulle pagine, che scorrono tutte, non cambia
+     nulla. */
+  scrollbar-gutter: stable;
   /* NIENTE scroll-behavior: smooth qui. Con una sezione in pin ScrollTrigger
      regola lo scroll da solo, e lo scroll morbido del browser si mette in
      mezzo: misurato, provocava un salto di layout da 0,625 di CLS all'aggancio
@@ -53,6 +61,12 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+}
+
+/* Finche il sipario e in scena la pagina non scorre: l'attributo lo mette e lo
+   toglie Sipario.jsx, e lo toglie anche se la sua timeline si rompe per strada. */
+html[data-sipario] {
+  overflow: hidden;
 }
 
 :focus-visible {
