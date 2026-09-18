@@ -39,8 +39,12 @@ const TEL_LABEL = "078 406 56 76";
    Le misure w/h sono quelle vere del file, servono a riservare lo spazio. */
 const SCENES = [
   {
-    id: "fritto",
-    word: "Fritto",
+    id: "sfizi",
+    word: "Sfizi",
+    /* Cinque lettere: con la campata piena verrebbe alta 380px e il prodotto
+       le mangerebbe l'ultima. La campata piu stretta la riporta al peso di
+       PANINI, che di lettere ne ha sei. */
+    span: 56,
     name: "Calzoncino fritto",
     price: "5.00",
     kicker: "Sfizi Partenopei",
@@ -52,25 +56,11 @@ const SCENES = [
     rest: -8,
   },
   {
-    id: "zucchine",
-    word: "Zucchine",
-    /* Qui prima c'era "Cotto, mozzarella e zucchine", che nel menu del cliente
-       non esiste: era un'ipotesi rimasta in vetrina. Il Giovannino esiste, sta
-       fra gli sfizi a 8.00, e nella sua fotografia le zucchine sono la cosa
-       che si vede per prima. */
-    name: "Giovannino crudo e provola",
-    price: "8.00",
-    kicker: "Sfizi Partenopei",
-    img: "img/prodotti/giovannino.webp",
-    imgSm: "img/prodotti/giovannino-sm.webp",
-    w: 979,
-    h: 690,
-    ink: "text-blu-800",
-    rest: 6,
-  },
-  {
-    id: "provola",
-    word: "Provola",
+    id: "panini",
+    word: "Panini",
+    /* Sotto la parola PANINI ci va un panino del listino, non il Giovannino,
+       che sta fra gli sfizi: la parola fa da etichetta alla scena, e se il
+       prodotto e di un'altra categoria l'etichetta mente. */
     name: "Salsiccia e provola",
     price: "9.00",
     kicker: "Paninoteca",
@@ -78,6 +68,20 @@ const SCENES = [
     imgSm: "img/prodotti/salsiccia-provola-sm.webp",
     w: 1200,
     h: 767,
+    ink: "text-blu-800",
+    rest: 6,
+  },
+  {
+    id: "menu",
+    /* Una frase, non una parola: due righe composte allo stesso corpo. */
+    word: ["Menù e piatti", "del giorno"],
+    name: "Menù completo",
+    price: "15.00",
+    kicker: "Paninoteca",
+    img: "img/prodotti/menu-cotoletta.webp",
+    imgSm: "img/prodotti/menu-cotoletta-sm.webp",
+    w: 1200,
+    h: 649,
     ink: "text-blu-700",
     rest: -5,
   },
@@ -373,27 +377,40 @@ export default function Showcase() {
 
           {/* Una parola per scena, tutte nello stesso posto. Non si
               sovrappongono mai: si danno il cambio una alla volta. */}
-          {SCENES.map((sc, i) => (
-            <div
-              key={sc.id}
-              data-scene
-              {...(i > 0 ? { "data-alt": "" } : {})}
-              className="absolute inset-x-0 top-[17%] text-center md:top-[16%] lg:top-[15%]"
-            >
-              <span
-                data-word
-                className={`inline-block font-display font-extrabold uppercase ${sc.ink}`}
-                style={{
-                  fontSize: fitWidth(sc.word, WORD_SPAN),
-                  lineHeight: 0.82,
-                  letterSpacing: "-0.045em",
-                  fontStretch: "100%",
-                }}
+          {SCENES.map((sc, i) => {
+            /* Una parola sola o una frase su piu righe. Il corpo si ricava
+               dalla riga PIU LUNGA e vale per tutte: dando a ogni riga la sua
+               larghezza piena, come si fa con le parole singole, "MENU"
+               verrebbe alto il triplo di "DEL GIORNO". */
+            const righe = Array.isArray(sc.word) ? sc.word : [sc.word];
+            const lunga = righe.reduce((a, b) => (b.length > a.length ? b : a));
+
+            return (
+              <div
+                key={sc.id}
+                data-scene
+                {...(i > 0 ? { "data-alt": "" } : {})}
+                className="absolute inset-x-0 top-[17%] text-center md:top-[16%] lg:top-[15%]"
               >
-                {sc.word}
-              </span>
-            </div>
-          ))}
+                <span
+                  data-word
+                  className={`inline-block font-display font-extrabold uppercase ${sc.ink}`}
+                  style={{
+                    fontSize: fitWidth(lunga, sc.span ?? WORD_SPAN),
+                    lineHeight: 0.82,
+                    letterSpacing: "-0.045em",
+                    fontStretch: "100%",
+                  }}
+                >
+                  {righe.map((riga) => (
+                    <span key={riga} data-riga className="block">
+                      {riga}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* alone fisso: da profondita e non scorre col nastro */}
@@ -416,7 +433,7 @@ export default function Showcase() {
         <div
           data-p-tilt
           aria-hidden="true"
-          className="pointer-events-none absolute top-[31%] left-1/2 z-10 w-[min(86vw,30svh)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[40%] md:w-[70vw] md:max-w-[480px] lg:top-[53%] lg:left-auto lg:right-[3.5%] lg:w-[43vw] lg:max-w-[650px] lg:translate-x-0"
+          className="pointer-events-none absolute top-[38%] left-1/2 z-10 w-[min(86vw,30svh)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[42%] md:w-[70vw] md:max-w-[480px] lg:top-[53%] lg:left-auto lg:right-[3.5%] lg:w-[43vw] lg:max-w-[650px] lg:translate-x-0"
         >
           <div data-p-in className="relative">
             {SCENES.map((s, i) => (
