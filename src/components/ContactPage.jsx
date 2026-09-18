@@ -284,7 +284,7 @@ export default function ContactPage() {
                         className="absolute inset-0 z-0 origin-bottom scale-y-0 bg-blu-600 transition-transform duration-500 ease-hero group-hover:scale-y-100 group-focus-visible:scale-y-100"
                       />
                       <span className="relative z-10 flex items-center gap-3">
-                        Prepara l'email
+                        Invia
                         <span className="transition-transform duration-500 ease-hero group-hover:translate-x-1">
                           <SendGlyph />
                         </span>
