@@ -11,7 +11,7 @@ export default function App() {
   return (
     <>
       <Sipario />
-      <SiteHeader current="index.html" />
+      <SiteHeader current="/" />
       <main>
         <Hero />
         <Showcase />

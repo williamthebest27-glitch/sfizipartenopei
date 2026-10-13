@@ -6,7 +6,7 @@ import ContactPage from "./components/ContactPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <SiteHeader current="contatti.html" />
+    <SiteHeader current="/contatti" />
     <ContactPage />
   </StrictMode>
 );

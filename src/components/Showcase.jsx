@@ -574,7 +574,7 @@ export default function Showcase() {
                 </a>
 
                 <a
-                  href="i-nostri-prodotti.html"
+                  href="/i-nostri-prodotti"
                   data-cta
                   className="group relative inline-flex items-center gap-2.5 rounded-full px-2 py-[0.9rem] font-body text-[0.74rem] font-semibold tracking-[0.1em] text-blu-700 uppercase"
                 >

@@ -11,9 +11,9 @@ import { PhoneGlyph, MailGlyph, PinGlyph, ClockGlyph, InstagramGlyph, FacebookGl
    =========================================================================== */
 
 const NAV = [
-  { label: "Home", href: "index.html" },
-  { label: "I nostri prodotti", href: "i-nostri-prodotti.html" },
-  { label: "Contatti", href: "contatti.html" },
+  { label: "Home", href: "/" },
+  { label: "I nostri prodotti", href: "/i-nostri-prodotti" },
+  { label: "Contatti", href: "/contatti" },
 ];
 
 export default function SiteFooter() {

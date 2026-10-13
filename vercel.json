@@ -2,10 +2,28 @@
   "regions": [
     "fra1"
   ],
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/pranzo",
+      "destination": "/i-nostri-prodotti#pranzo",
+      "permanent": true
+    },
+    {
+      "source": "/i-nostri-sfizi",
+      "destination": "/i-nostri-prodotti#sfizi",
+      "permanent": true
+    },
+    {
+      "source": "/paninoteca",
+      "destination": "/i-nostri-prodotti#panini",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/gestione",
-      "destination": "/gestione-pranzo.html"
+      "destination": "/gestione-pranzo"
     }
   ],
   "headers": [

@@ -401,7 +401,7 @@ export default function PranzoAdmin() {
           </div>
           <div className="flex items-center gap-2">
             <a
-              href="i-nostri-prodotti.html#pranzo"
+              href="/i-nostri-prodotti#pranzo"
               target="_blank"
               rel="noopener"
               className="rounded-full border border-blu-200 px-3.5 py-2 text-[0.74rem] font-semibold text-blu-800 transition hover:border-blu-600"

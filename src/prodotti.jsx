@@ -6,7 +6,7 @@ import ProductsPage from "./components/ProductsPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <SiteHeader current="i-nostri-prodotti.html" />
+    <SiteHeader current="/i-nostri-prodotti" />
     <ProductsPage />
   </StrictMode>
 );

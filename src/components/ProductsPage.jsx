@@ -699,7 +699,7 @@ export default function ProductsPage() {
               </a>
 
               <a
-                href="contatti.html"
+                href="/contatti"
                 className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-blu-200 bg-white px-7 py-[1.05rem] font-body text-[0.76rem] font-semibold tracking-[0.1em] text-blu-800 uppercase transition-all duration-300 ease-hero hover:-translate-y-0.5 hover:border-blu-700 focus-visible:-translate-y-0.5"
               >
                 Scrivici

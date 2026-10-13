@@ -427,7 +427,7 @@ export default function Hero() {
 
           <div className="mt-[clamp(18px,3vh,34px)] flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
             <a
-              href="i-nostri-prodotti.html"
+              href="/i-nostri-prodotti"
               data-cta
               className="group relative isolate inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-blu-900 px-8 py-[1.05rem] font-body text-[0.78rem] font-semibold tracking-[0.1em] text-white uppercase shadow-[0_18px_40px_-22px_rgba(7,41,55,0.95)] transition-all duration-300 ease-hero hover:-translate-y-0.5 hover:shadow-[0_22px_48px_-20px_rgba(13,169,220,0.85)] focus-visible:-translate-y-0.5"
             >

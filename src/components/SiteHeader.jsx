@@ -21,17 +21,18 @@ const TEL = "+41784065676";
 const TEL_LABEL = "078 406 56 76";
 
 /* Tre pagine, non cinque: pranzo, sfizi e panini erano tre pagine separate sul
-   sito Webador, qui sono tre sezioni ancorate dentro "I nostri prodotti". Gli
-   href sono relativi e con estensione: cosi il sito funziona servito da
-   qualsiasi cartella, anche aperto dal disco. */
+   sito Webador, qui sono tre sezioni ancorate dentro "I nostri prodotti" (i
+   vecchi indirizzi /pranzo, /i-nostri-sfizi e /paninoteca ci portano con un
+   redirect, vedi vercel.json). Gli href sono gli indirizzi puliti, senza
+   .html: li serve cleanUrls su Vercel, e in locale il server di Vite. */
 const NAV = [
-  { label: "Home", short: "Home", href: "index.html" },
+  { label: "Home", short: "Home", href: "/" },
   {
     label: "I nostri prodotti",
     short: "Prodotti",
-    href: "i-nostri-prodotti.html",
+    href: "/i-nostri-prodotti",
   },
-  { label: "Contatti", short: "Contatti", href: "contatti.html" },
+  { label: "Contatti", short: "Contatti", href: "/contatti" },
 ];
 
 /* Il marchio nella barra e lo stesso disegno vettoriale del sipario
@@ -100,7 +101,7 @@ function NavLink({ item, compact, current }) {
   );
 }
 
-export default function SiteHeader({ current = "index.html" }) {
+export default function SiteHeader({ current = "/" }) {
   const root = useRef(null);
   const bg = useRef(null);
 
@@ -169,7 +170,7 @@ export default function SiteHeader({ current = "index.html" }) {
         <div className="pointer-events-auto flex items-center gap-4 py-[clamp(10px,2vh,20px)]">
           <div className="flex flex-1 basis-0 justify-start">
             <a
-              href="index.html"
+              href="/"
               data-head-item
               className="flex items-center gap-3 rounded-sm"
               aria-label="Sfizi Partenopei, torna alla home"
@@ -208,7 +209,7 @@ export default function SiteHeader({ current = "index.html" }) {
             </a>
 
             <a
-              href="contatti.html"
+              href="/contatti"
               data-head-item
               className="group relative isolate inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-blu-900 px-4 py-2.5 font-body text-[0.66rem] font-semibold tracking-[0.12em] text-white uppercase shadow-[0_14px_30px_-16px_rgba(7,41,55,0.9)] transition-all duration-300 ease-hero hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-14px_rgba(13,169,220,0.8)] focus-visible:-translate-y-0.5 sm:px-5 sm:py-3 sm:text-[0.68rem]"
             >
