@@ -560,6 +560,36 @@ function CategorySection({ cat, pranzo }) {
 export default function ProductsPage() {
   const root = useRef(null);
   const pranzo = usePranzo();
+
+  /* Arrivo con un'ancora (#panini, e i vecchi indirizzi /pranzo,
+     /i-nostri-sfizi e /paninoteca che vercel.json rimanda qui): il browser
+     cerca la sezione quando finisce di leggere l'HTML, ma React la disegna un
+     attimo dopo, e il salto non avveniva mai. Va fatto qui, prima di useReveal,
+     che deve vedere la pagina gia nella posizione giusta. Poi la pagina si
+     assesta ancora (i font, il pranzo letto dall'archivio che cambia l'altezza
+     della prima sezione): per due secondi e mezzo la sezione resta agganciata,
+     a meno che chi legge non tocchi qualcosa prima. */
+  useLayoutEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    const target = id && document.getElementById(id);
+    if (!target) return;
+
+    const jump = () => target.scrollIntoView({ block: "start" });
+    jump();
+
+    const ro = new ResizeObserver(jump);
+    ro.observe(document.body);
+    const USER = ["wheel", "touchstart", "keydown", "pointerdown"];
+    const stop = () => {
+      ro.disconnect();
+      clearTimeout(timer);
+      USER.forEach((e) => window.removeEventListener(e, stop));
+    };
+    const timer = setTimeout(stop, 2500);
+    USER.forEach((e) => window.addEventListener(e, stop, { passive: true }));
+    return stop;
+  }, []);
+
   useReveal(root);
 
   /* La barra delle categorie segna dove sei. Un ScrollTrigger per sezione che
