@@ -1,6 +1,6 @@
 # Sfizi Partenopei
 
-Sito di [Sfizi Partenopei](https://sfizi-partenopei.vercel.app) — paninoteca e sfizi
+Sito di [Sfizi Partenopei](https://www.sfizipartenopeilugano.ch) — paninoteca e sfizi
 fritti napoletani a Viganello (Lugano).
 
 Tre pagine statiche: la home con il sipario d'ingresso e la vetrina dei prodotti

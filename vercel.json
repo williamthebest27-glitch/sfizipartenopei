@@ -1,9 +1,22 @@
 {
-  "rewrites": [{ "source": "/gestione", "destination": "/gestione-pranzo.html" }],
+  "regions": [
+    "fra1"
+  ],
+  "rewrites": [
+    {
+      "source": "/gestione",
+      "destination": "/gestione-pranzo.html"
+    }
+  ],
   "headers": [
     {
       "source": "/gestione(.*)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ]
 }
