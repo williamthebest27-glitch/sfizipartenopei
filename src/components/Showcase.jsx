@@ -90,11 +90,14 @@ const SCENES = [
 const N = SCENES.length;
 const WORD_SPAN = 66;
 
+/* show: su quali schermi compare. Sul telefono resta solo Finestre, su una
+   riga sola: "entro 8 km" e gia scritto nella frase sopra, e lo spazio
+   risparmiato serve a far scendere il testo sotto al prodotto. */
 const FACTS = [
-  { k: "Consegna", v: "entro 8 km", always: true },
-  { k: "Finestre", v: "11:30–13:30 · 18:30–21:00", always: true },
-  { k: "Apertura", v: "Lun–Sab 11:30–20:30" },
-  { k: "Banco", v: "P.le G. Quadri 1, Viganello" },
+  { k: "Consegna", v: "entro 8 km", show: "hidden sm:flex" },
+  { k: "Finestre", v: "11:30–13:30 · 18:30–21:00", show: "flex col-span-2 sm:col-span-1" },
+  { k: "Apertura", v: "Lun–Sab 11:30–20:30", show: "hidden md:flex" },
+  { k: "Banco", v: "P.le G. Quadri 1, Viganello", show: "hidden md:flex" },
 ];
 
 /* Macchie organiche: border-radius a otto valori invece di un SVG. Pesano
@@ -429,11 +432,11 @@ export default function Showcase() {
             contenitore porta il translate CSS, l'immagine resta libera per
             GSAP. La larghezza e legata anche a svh: su un telefono basso, un
             prodotto dimensionato solo sulla larghezza finirebbe addosso al
-            testo. */}
+            testo (sotto i 700px di altezza sale e si stringe ancora un po'). */}
         <div
           data-p-tilt
           aria-hidden="true"
-          className="pointer-events-none absolute top-[38%] left-1/2 z-10 w-[min(86vw,30svh)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[42%] md:w-[70vw] md:max-w-[480px] lg:top-[53%] lg:left-auto lg:right-[3.5%] lg:w-[43vw] lg:max-w-[650px] lg:translate-x-0"
+          className="pointer-events-none absolute top-[35%] left-1/2 z-10 w-[min(86vw,30svh)] [@media(max-height:700px)]:top-[33%] [@media(max-height:700px)]:w-[min(86vw,27svh)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[42%] md:w-[70vw] md:max-w-[480px] lg:top-[53%] lg:left-auto lg:right-[3.5%] lg:w-[43vw] lg:max-w-[650px] lg:translate-x-0"
         >
           <div data-p-in className="relative">
             {SCENES.map((s, i) => (
@@ -536,7 +539,7 @@ export default function Showcase() {
             </div>
 
             {/* scheda del prodotto in scena: cambia col carosello */}
-            <div className="relative mt-[clamp(12px,2.4vh,26px)] h-[clamp(46px,8.4vh,86px)] lg:h-[clamp(70px,10vh,104px)] lg:absolute lg:right-0 lg:bottom-[clamp(8px,2.2vh,26px)] lg:mt-0 lg:w-[clamp(300px,30vw,420px)]">
+            <div className="relative mt-[clamp(10px,2vh,26px)] h-[48px] sm:h-[clamp(46px,8.4vh,86px)] lg:h-[clamp(70px,10vh,104px)] lg:absolute lg:right-0 lg:bottom-[clamp(8px,2.2vh,26px)] lg:mt-0 lg:w-[clamp(300px,30vw,420px)]">
               {SCENES.map((s, i) => (
                 <div
                   key={s.id}
@@ -581,7 +584,7 @@ export default function Showcase() {
             <div className="flex items-end justify-between gap-6">
               <ul className="grid flex-1 grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4">
                 {FACTS.map((f) => (
-                  <li key={f.k} data-fact className={`flex flex-col gap-1 ${f.always ? "" : "hidden md:flex"}`}>
+                  <li key={f.k} data-fact className={`flex-col gap-1 ${f.show}`}>
                     <span className="flex items-center gap-2 font-body text-[0.64rem] font-semibold tracking-[0.16em] text-blu-700 uppercase">
                       <span aria-hidden="true" className="h-[3px] w-[3px] shrink-0 bg-blu-500" />
                       {f.k}

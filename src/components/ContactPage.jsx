@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { INFO } from "../data/menu.js";
+import { MAPPA } from "../data/mappa.js";
 import { useReveal } from "../lib/reveal.js";
 import PageOpener from "./PageOpener.jsx";
 import SiteFooter from "./SiteFooter.jsx";
@@ -102,6 +103,99 @@ function ContactCard({ icon, label, children, href, external }) {
   );
 }
 
+/* --------------------------------------------------------------------------
+   Scheda "Il banco": un piccolo riquadro di mappa sopra l'indirizzo, tutta
+   cliccabile verso Google Maps.
+   La mappa e un'immagine nostra, disegnata dai dati OpenStreetMap coi colori
+   del sito (script scratchpad/mappa/disegna.py): niente iframe di Google,
+   niente cookie di terzi, e il lago e il Cassarate si riconoscono subito. Il
+   riquadro ha lo stesso rapporto dell'immagine, cosi etichette e spillo,
+   posizionati in percentuale, cadono nel punto giusto; le etichette sono HTML,
+   quindi nitide e nel font del sito. L'attribuzione a OpenStreetMap e
+   obbligatoria (ODbL) e resta scritta nell'angolo.
+   -------------------------------------------------------------------------- */
+const LABEL_STYLE = {
+  quartiere: "font-body text-[0.54rem] font-semibold tracking-[0.18em] text-blu-900 uppercase sm:text-[0.6rem]",
+  lago: "font-script text-[1.15rem] text-blu-800 sm:text-[1.35rem]",
+};
+const HALO = {
+  textShadow:
+    "0 0 2px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.9), 0 0 12px rgba(255,255,255,0.6)",
+};
+
+function BancoCard() {
+  return (
+    <a
+      data-item
+      href={INFO.maps}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block overflow-hidden rounded-[22px] border border-blu-100 bg-white shadow-[0_16px_36px_-32px_rgba(7,41,55,0.5)] transition-all duration-500 ease-hero hover:-translate-y-1 hover:border-blu-200 hover:shadow-[0_26px_48px_-32px_rgba(13,169,220,0.6)] focus-visible:-translate-y-1"
+    >
+      <span className="relative block overflow-hidden border-b border-blu-100" style={{ aspectRatio: `${MAPPA.w} / ${MAPPA.h}` }}>
+        <img
+          src="img/mappa-riquadro.webp"
+          alt=""
+          width={MAPPA.w}
+          height={MAPPA.h}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-hero group-hover:scale-[1.03]"
+        />
+
+        {MAPPA.labels.map((l) => (
+          <span
+            key={l.t}
+            aria-hidden="true"
+            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap ${LABEL_STYLE[l.k]}`}
+            style={{ ...HALO, left: `${l.x}%`, top: `${l.y}%` }}
+          >
+            {l.t}
+          </span>
+        ))}
+
+        {/* lo spillo: il punto cade esattamente sul negozio */}
+        <span aria-hidden="true" className="absolute" style={{ left: `${MAPPA.pin.x}%`, top: `${MAPPA.pin.y}%` }}>
+          <span className="absolute -top-3 -left-3 h-6 w-6 rounded-full bg-blu-500/40 motion-safe:animate-ping" />
+          <span className="absolute -top-[7px] -left-[7px] h-3.5 w-3.5 rounded-full border-2 border-white bg-blu-600 shadow-[0_2px_6px_rgba(7,41,55,0.4)]" />
+          <span className="absolute bottom-2.5 left-0 flex -translate-x-1/2 flex-col items-center">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-white bg-blu-600 text-white shadow-[0_10px_22px_-8px_rgba(7,41,55,0.75)] transition-transform duration-500 ease-hero group-hover:-translate-y-1">
+              <PinGlyph size={16} />
+            </span>
+            <span className="-mt-[5px] h-2.5 w-2.5 rotate-45 border-r-[3px] border-b-[3px] border-white bg-blu-600" />
+          </span>
+        </span>
+
+        <span className="absolute right-2 bottom-2 rounded-full bg-white/85 px-2 py-0.5 font-body text-[0.56rem] text-blu-800">
+          © OpenStreetMap
+        </span>
+      </span>
+
+      <span className="flex items-start gap-4 p-5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-blu-200 bg-blu-50 text-blu-600 transition-all duration-500 ease-hero group-hover:border-blu-600 group-hover:bg-blu-600 group-hover:text-white">
+          <PinGlyph size={18} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-body text-[0.62rem] font-semibold tracking-[0.2em] text-blu-700 uppercase">
+            Il banco
+          </span>
+          <span className="mt-1 block text-[1rem] leading-snug text-blu-950">
+            {INFO.via}
+            <br />
+            {INFO.cap}
+          </span>
+          <span className="mt-2 flex items-center gap-2 font-body text-[0.68rem] font-semibold tracking-[0.1em] text-blu-700 uppercase">
+            Indicazioni stradali
+            <span className="transition-transform duration-500 ease-hero group-hover:translate-x-1">
+              <ArrowGlyph />
+            </span>
+          </span>
+        </span>
+      </span>
+    </a>
+  );
+}
+
 /* ------------------------------------------------------------------------ */
 
 export default function ContactPage() {
@@ -180,11 +274,7 @@ export default function ContactPage() {
                 <span className="break-all">{INFO.email}</span>
               </ContactCard>
 
-              <ContactCard icon={<PinGlyph size={18} />} label="Il banco" href={INFO.maps} external>
-                {INFO.via}
-                <br />
-                {INFO.cap}
-              </ContactCard>
+              <BancoCard />
 
               <ContactCard icon={<ClockGlyph size={18} />} label="Orari">
                 <span className="flex flex-col gap-1">

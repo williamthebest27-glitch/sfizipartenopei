@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { CATEGORIES, PRODUCTS, INFO, ALLERGENI } from "../data/menu.js";
+import { CATEGORIES, PRODUCTS, CONTORNI, INFO, ALLERGENI } from "../data/menu.js";
 import { useReveal } from "../lib/reveal.js";
 import PageOpener from "./PageOpener.jsx";
 import SiteFooter from "./SiteFooter.jsx";
@@ -345,10 +345,94 @@ function PaniniMenu({ items }) {
 }
 
 /* --------------------------------------------------------------------------
+   Contorni: il pannello chiaro che chiude la sezione pranzo.
+   Sette voci allo stesso prezzo, come le bevande: niente da confrontare, quindi
+   niente card. Le foto sono ciotole viste dall'alto, grandi, tre per riga (lo
+   ha chiesto il cliente). Flex e non grid, cosi l'ultima riga incompleta resta
+   centrata invece di lasciare un buco a destra (7 = 3+3+1, 2+2+2+1).
+   -------------------------------------------------------------------------- */
+function Contorni() {
+  return (
+    <div
+      data-item
+      className="relative isolate mt-4 overflow-hidden rounded-[30px] border border-blu-100 bg-blu-50 p-[clamp(22px,3vw,42px)] sm:mt-5"
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-[34%] -left-[10%] -z-10 aspect-square w-[40%]"
+        style={{
+          borderRadius: "58% 42% 71% 29% / 38% 63% 37% 62%",
+          background:
+            "radial-gradient(closest-side, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 55%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="flex items-center gap-3">
+            <span aria-hidden="true" className="block h-px w-8 bg-blu-500" />
+            <span className="font-body text-[0.62rem] font-semibold tracking-[0.22em] text-blu-700 uppercase">
+              Dal banco
+            </span>
+          </p>
+          <h3
+            className="mt-2 font-display font-extrabold text-blu-800"
+            style={{ fontSize: "clamp(1.6rem,3.4vw,2.6rem)", lineHeight: 1, letterSpacing: "-0.035em" }}
+          >
+            Contorni
+          </h3>
+        </div>
+        <p className="max-w-[40ch] text-[0.92rem] leading-relaxed text-blu-800 md:text-right">
+          {CONTORNI.items.length} contorni, tutti a{" "}
+          <span className="font-semibold text-blu-950 tabular-nums">{CONTORNI.price} CHF</span>.
+        </p>
+      </div>
+
+      <ul className="-mx-2 mt-[clamp(24px,4vh,44px)] flex flex-wrap justify-center gap-y-[clamp(24px,4vh,44px)] sm:-mx-4">
+        {CONTORNI.items.map((item) => (
+          <li
+            key={item.id}
+            className="group flex basis-1/2 flex-col items-center px-2 text-center sm:basis-1/3 sm:px-4"
+          >
+            <div className="relative aspect-square w-full max-w-[340px]">
+              <img
+                src={item.img}
+                srcSet={`${item.imgSm} 680w, ${item.img} 1200w`}
+                sizes="(min-width: 1280px) 340px, (min-width: 640px) 30vw, 46vw"
+                alt={item.name}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 ease-hero group-hover:scale-[1.04] group-hover:-rotate-[10deg]"
+              />
+            </div>
+            <p
+              className="mt-3 font-display text-[clamp(0.98rem,1.5vw,1.25rem)] font-extrabold text-blu-950"
+              style={{ fontStretch: "92%", lineHeight: 1.15, textWrap: "balance" }}
+            >
+              {item.name}
+            </p>
+            <p className="mt-1.5 flex items-baseline gap-1.5">
+              <span className="font-body text-[0.6rem] font-semibold tracking-[0.14em] text-blu-700 uppercase">
+                CHF
+              </span>
+              <span className="font-body text-[1.08rem] font-semibold text-blu-950 tabular-nums">
+                {CONTORNI.price}
+              </span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------------------
    Sezione di categoria: testata editoriale + griglia.
    -------------------------------------------------------------------------- */
 function CategorySection({ cat }) {
   const items = PRODUCTS[cat.id];
+  /* i contorni stanno nel loro pannello ma sono voci in carta del pranzo */
+  const count = items.length + (cat.id === "pranzo" ? CONTORNI.items.length : 0);
   const grid =
     cat.layout === "dense"
       ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
@@ -404,7 +488,7 @@ function CategorySection({ cat }) {
             data-item
             className="mt-3 font-body text-[0.68rem] font-semibold tracking-[0.16em] text-blu-700 uppercase tabular-nums"
           >
-            {items.length} voci in carta
+            {count} voci in carta
           </p>
         </div>
       </div>
@@ -421,7 +505,9 @@ function CategorySection({ cat }) {
         )}
       </div>
 
-      {/* i panini menù chiudono la sezione panini, come sul sito del cliente */}
+      {/* i contorni chiudono il pranzo, i panini menù la sezione panini, come
+          sul sito del cliente */}
+      {cat.id === "pranzo" && <Contorni />}
       {cat.id === "panini" && <PaniniMenu items={items} />}
     </section>
   );

@@ -100,14 +100,6 @@ export const PRODUCTS = {
       featured: true,
       img: null,
     },
-    {
-      id: "contorni",
-      name: "Contorni",
-      desc: "Uno a scelta dal banco: friarielli, funghi, melanzane, zucchine alla scapece, patate al forno.",
-      price: "5.00",
-      img: "img/prodotti/contorni.webp",
-      imgSm: "img/prodotti/contorni-sm.webp",
-    },
   ],
 
   sfizi: [
@@ -187,23 +179,23 @@ export const PRODUCTS = {
   /* Le cinque bevande del banco, tutte a 3.00 come sul sito del cliente. Il
      formato sta nella descrizione invece che nel nome: in una riga di listino
      "Coca Cola" e "33 cl" sono due informazioni diverse e vanno lette come
-     tali. */
+     tali. Le due Coca Cola sono in lattina e la birra in bottiglia di vetro,
+     con le foto del vecchio sito. */
   bevande: [
     {
       id: "coca-cola",
       name: "Coca Cola",
-      desc: "33 cl",
+      desc: "Lattina · 33 cl",
       price: "3.00",
-      img: "img/prodotti/coca-cola.webp",
-      imgSm: "img/prodotti/coca-cola-sm.webp",
+      img: "img/prodotti/coca-cola-lattina.webp",
+      imgSm: "img/prodotti/coca-cola-lattina-sm.webp",
     },
     {
       id: "coca-cola-zero",
       name: "Coca Cola Zero",
-      desc: "33 cl",
+      desc: "Lattina · 33 cl",
       price: "3.00",
-      img: "img/prodotti/coca-cola-zero.webp",
-      imgSm: "img/prodotti/coca-cola-zero-sm.webp",
+      img: "img/prodotti/coca-cola-zero-lattina.webp",
     },
     {
       id: "valser-naturale",
@@ -224,11 +216,28 @@ export const PRODUCTS = {
     {
       id: "feldschlosschen",
       name: "Feldschlösschen",
-      desc: "Birra svizzera · 0.33 l",
+      desc: "Birra svizzera · vetro 0.33 l",
       price: "3.00",
-      img: "img/prodotti/feldschlosschen.webp",
-      imgSm: "img/prodotti/feldschlosschen-sm.webp",
+      img: "img/prodotti/feldschlosschen-pils.webp",
+      imgSm: "img/prodotti/feldschlosschen-pils-sm.webp",
     },
+  ],
+};
+
+/* I contorni del pranzo, tutti a 5.00. Sul sito del cliente sono sette voci
+   separate, ognuna con la sua foto: qui chiudono la sezione pranzo in un
+   pannello a parte. Le foto sono le teglie del banco fotografate dall'alto,
+   ritagliate a cerchio dentro una ciotola (script ciotole.py). */
+export const CONTORNI = {
+  price: "5.00",
+  items: [
+    { id: "melanzane-grigliate", name: "Melanzane grigliate sott'olio", img: "img/prodotti/contorno-melanzane-grigliate.webp", imgSm: "img/prodotti/contorno-melanzane-grigliate-sm.webp" },
+    { id: "carciofini", name: "Carciofini grigliati sott'olio", img: "img/prodotti/contorno-carciofini.webp", imgSm: "img/prodotti/contorno-carciofini-sm.webp" },
+    { id: "friarielli", name: "Friarielli", img: "img/prodotti/contorno-friarielli.webp", imgSm: "img/prodotti/contorno-friarielli-sm.webp" },
+    { id: "funghi", name: "Funghi", img: "img/prodotti/contorno-funghi.webp", imgSm: "img/prodotti/contorno-funghi-sm.webp" },
+    { id: "melanzane-funghetti", name: "Melanzane funghetti", img: "img/prodotti/contorno-melanzane-funghetti.webp", imgSm: "img/prodotti/contorno-melanzane-funghetti-sm.webp" },
+    { id: "zucchine-scapece", name: "Zucchine alla scapece", img: "img/prodotti/contorno-zucchine-scapece.webp", imgSm: "img/prodotti/contorno-zucchine-scapece-sm.webp" },
+    { id: "patate-forno", name: "Patate al forno", img: "img/prodotti/contorno-patate-forno.webp", imgSm: "img/prodotti/contorno-patate-forno-sm.webp" },
   ],
 };
 
