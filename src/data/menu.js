@@ -108,11 +108,13 @@ export const PRODUCTS = {
       desc: "Porchetta di Ariccia e provola filante.",
       price: "9.00",
       menu: "15.00",
-      /* Le due foto della porchetta che c'erano nella cartella del cliente
-         sono uno stock Alamy con la filigrana addosso: non si possono
-         pubblicare. Finche non arriva uno scatto vero, la card mostra il
-         segnaposto disegnato. */
-      img: null,
+      /* Foto generata con l'AI (le due che c'erano erano uno stock Alamy con
+         la filigrana, non pubblicabili). Il menu e composto con la bottiglia e
+         le patatine degli altri tre, per tenerli in serie. */
+      img: "img/prodotti/porchetta-provola.webp",
+      imgSm: "img/prodotti/porchetta-provola-sm.webp",
+      imgMenu: "img/prodotti/menu-porchetta.webp",
+      imgMenuSm: "img/prodotti/menu-porchetta-sm.webp",
     },
     {
       id: "hamburger-provola",
