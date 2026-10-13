@@ -44,7 +44,7 @@ const SCENES = [
     /* Cinque lettere: con la campata piena verrebbe alta 380px e il prodotto
        le mangerebbe l'ultima. La campata piu stretta la riporta al peso di
        PANINI, che di lettere ne ha sei. */
-    span: 56,
+    span: 66,
     spanMd: 44,
     spanLg: 60,
     name: "Calzoncino fritto",
@@ -60,6 +60,7 @@ const SCENES = [
   {
     id: "panini",
     word: "Panini",
+    span: 86,
     spanMd: 54,
     spanLg: 49,
     /* Sotto la parola PANINI ci va un panino del listino, non il Giovannino,
@@ -79,6 +80,7 @@ const SCENES = [
     id: "menu",
     /* Una frase, non una parola: due righe composte allo stesso corpo. */
     word: ["Menù e piatti", "del giorno"],
+    span: 84,
     spanMd: 56,
     spanLg: 52,
     name: "Menù completo",
@@ -95,6 +97,11 @@ const SCENES = [
 
 const N = SCENES.length;
 const WORD_SPAN = 66;
+/* Sul telefono il titolo e grande e centrato, ma l'altezza e poca: il corpo
+   ha anche un tetto in svh (0.45 volte la campata), che a 844 px di altezza
+   non scatta e sui telefoni bassi lo riduce quanto basta a lasciare spazio
+   alla foto. */
+const WORD_CAP_TEL = 0.45;
 /* Da lg il prodotto sta appoggiato al bordo destro (largo 43vw): la parola si
    allinea a sinistra, sulla stessa linea del testo sotto, e arriva fin quasi
    al prodotto senza toccarlo. Le campate sono per scena perche WORD_EM e una
@@ -144,6 +151,36 @@ function PhoneGlyph() {
 
 export default function Showcase() {
   const root = useRef(null);
+
+  /* Sul telefono la foto sta fra il titolo e il blocco di testo, e quello
+     spazio cambia molto da un telefono all'altro (da 170 a 320 px). Lo si
+     misura e lo si scrive in due variabili CSS sul pannello: il prodotto si
+     centra li e prende tutta l'altezza disponibile. Si legge solo il layout
+     (le parole e il testo non hanno trasformazioni), quindi le animazioni
+     non falsano la misura. Da tablet in su le variabili ci sono ma non le
+     usa nessuno. */
+  useLayoutEffect(() => {
+    const el = root.current;
+    const pannello = el?.querySelector("[data-pannello]");
+    const testo = el?.querySelector("[data-testo]");
+    const scene = el ? Array.from(el.querySelectorAll("[data-scene]")) : [];
+    if (!pannello || !testo || !scene.length) return;
+
+    const misura = () => {
+      const top = pannello.getBoundingClientRect().top;
+      const fondo = Math.max(...scene.map((sc) => sc.getBoundingClientRect().top - top + sc.offsetHeight));
+      const cima = testo.getBoundingClientRect().top - top;
+      pannello.style.setProperty("--zona-top", `${Math.round(fondo + 10)}px`);
+      pannello.style.setProperty("--zona-h", `${Math.max(90, Math.round(cima - fondo - 22))}px`);
+    };
+
+    misura();
+    const ro = new ResizeObserver(misura);
+    ro.observe(pannello);
+    ro.observe(testo);
+    if (document.fonts) document.fonts.ready.then(misura);
+    return () => ro.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     const el = root.current;
@@ -374,7 +411,7 @@ export default function Showcase() {
           giu" segnalato dal cliente. Lo sticky lo gestisce il compositore del
           browser, quindi non deriva di un pixel e non produce layout shift.
           ScrollTrigger qui si limita a leggere il progresso. */}
-      <div className="sticky top-0 h-[100svh] overflow-hidden bg-white">
+      <div data-pannello className="sticky top-0 h-[100svh] overflow-hidden bg-white">
         {/* ===== z-0 · fondale che scorre ===================================
             Un solo nastro largo N schermate. Ogni scena porta le sue macchie e
             la sua parola gigante. */}
@@ -409,13 +446,13 @@ export default function Showcase() {
                 key={sc.id}
                 data-scene
                 {...(i > 0 ? { "data-alt": "" } : {})}
-                className="absolute inset-x-0 top-[17%] pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] text-left md:top-[16%] lg:top-[15%]"
+                className="absolute inset-x-0 top-[max(118px,14svh)] text-center md:top-[16%] md:pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] md:text-left lg:top-[15%]"
               >
                 <span
                   data-word
                   className={`inline-block font-display font-extrabold uppercase [font-size:var(--fs)] md:[font-size:var(--fs-md)] lg:[font-size:var(--fs-lg)] ${sc.ink}`}
                   style={{
-                    "--fs": fitWidth(lunga, sc.span ?? WORD_SPAN),
+                    "--fs": fitWidth(lunga, sc.span ?? WORD_SPAN, WORD_CAP_TEL),
                     "--fs-md": fitWidth(lunga, sc.spanMd ?? WORD_SPAN_MD),
                     "--fs-lg": fitWidth(lunga, sc.spanLg ?? WORD_SPAN_LG),
                     lineHeight: 0.82,
@@ -454,7 +491,7 @@ export default function Showcase() {
         <div
           data-p-tilt
           aria-hidden="true"
-          className="pointer-events-none absolute top-[36%] right-0 z-10 w-[min(86vw,30svh)] [@media(max-height:700px)]:top-[35.5%] [@media(max-height:700px)]:w-[min(86vw,25svh)] max-w-[540px] -translate-y-1/2 md:top-[44%] md:right-[0.5%] md:w-[62vw] md:max-w-[440px] lg:top-[53%] lg:w-[43vw] lg:max-w-[650px]"
+          className="pointer-events-none absolute top-[calc(var(--zona-top,32svh)+var(--zona-h,28svh)/2)] left-1/2 z-10 w-[min(90vw,calc(var(--zona-h,28svh)/0.7))] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[44%] md:right-[0.5%] md:left-auto md:w-[62vw] md:max-w-[440px] md:translate-x-0 lg:top-[53%] lg:w-[43vw] lg:max-w-[650px]"
         >
           <div data-p-in className="relative">
             {SCENES.map((s, i) => (
@@ -482,7 +519,7 @@ export default function Showcase() {
             pt lascia spazio alla barra fissa, che su mobile e alta due righe. */}
         <div className="relative z-20 mx-auto flex h-full w-full max-w-[1440px] flex-col px-[clamp(20px,5vw,72px)] pt-[clamp(108px,15vh,150px)] lg:pt-[clamp(88px,11vh,124px)]">
           <div className="relative flex flex-1 flex-col justify-end pb-[clamp(8px,2.2vh,26px)]">
-            <div className="lg:max-w-[50%]">
+            <div data-testo className="lg:max-w-[50%]">
               <p className="flex items-center gap-3">
                 <span data-eyebrow-line aria-hidden="true" className="block h-px w-8 bg-blu-500 sm:w-12" />
                 <span
@@ -509,7 +546,7 @@ export default function Showcase() {
 
               <p
                 data-sub
-                className="mt-[clamp(8px,1.6vh,18px)] max-w-[46ch] text-[clamp(0.86rem,0.95vw,1.06rem)] leading-relaxed text-blu-800"
+                className="mt-[clamp(8px,1.6vh,18px)] max-w-[46ch] max-md:[@media(max-height:759px)]:hidden text-[clamp(0.86rem,0.95vw,1.06rem)] leading-relaxed text-blu-800"
               >
                 <span className="sm:hidden">
                   Fritto napoletano fatto al momento, consegnato entro 8 km.
