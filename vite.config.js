@@ -19,6 +19,8 @@ export default defineConfig({
         index: resolve(__dirname, "index.html"),
         prodotti: resolve(__dirname, "i-nostri-prodotti.html"),
         contatti: resolve(__dirname, "contatti.html"),
+        // la dashboard del cliente per la sezione pranzo (vedi api/)
+        gestione: resolve(__dirname, "gestione-pranzo.html"),
       },
     },
   },

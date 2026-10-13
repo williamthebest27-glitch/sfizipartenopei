@@ -1,0 +1,9 @@
+{
+  "rewrites": [{ "source": "/gestione", "destination": "/gestione-pranzo.html" }],
+  "headers": [
+    {
+      "source": "/gestione(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}

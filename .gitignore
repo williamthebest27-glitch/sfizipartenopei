@@ -14,3 +14,5 @@ Thumbs.db
 
 # configurazione dell assistente, non serve al progetto
 .claude
+
+.env*

@@ -61,46 +61,8 @@ export const CATEGORIES = [
 ];
 
 export const PRODUCTS = {
-  pranzo: [
-    {
-      id: "gnocchi-sorrentina",
-      name: "Gnocchi alla sorrentina",
-      desc: "Gnocchi al pomodoro gratinati con la mozzarella.",
-      price: "8.00",
-      price2: "12.00",
-      img: null,
-    },
-    {
-      id: "frittata-maccheroni",
-      name: "Frittata di maccheroni",
-      desc: "Pasta legata e rosolata in padella, tagliata a fette.",
-      price: "9.00",
-      price2: "12.00",
-      img: null,
-    },
-    {
-      id: "ruotino-boscaiola",
-      name: "Ruotino alla boscaiola",
-      desc: "",
-      price: "7.00",
-      img: null,
-    },
-    {
-      id: "ruotino-friarielli",
-      name: "Ruotino salsiccia e friarielli",
-      desc: "",
-      price: "7.00",
-      img: null,
-    },
-    {
-      id: "menu-pranzo",
-      name: "Menù completo",
-      desc: "Un primo a scelta piu la bibita.",
-      price: "10.00",
-      featured: true,
-      img: null,
-    },
-  ],
+  /* pranzo: non sta qui. Lo modifica il cliente dalla dashboard, vedi
+     data/pranzo.js e lib/pranzo.js. */
 
   sfizi: [
     { id: "arancino", name: "Arancino bolognese", desc: "Riso e ragu, impanato e fritto.", price: "4.00", img: "img/prodotti/arancino.webp", imgSm: "img/prodotti/arancino-sm.webp" },
@@ -221,23 +183,6 @@ export const PRODUCTS = {
       img: "img/prodotti/feldschlosschen-pils.webp",
       imgSm: "img/prodotti/feldschlosschen-pils-sm.webp",
     },
-  ],
-};
-
-/* I contorni del pranzo, tutti a 5.00. Sul sito del cliente sono sette voci
-   separate, ognuna con la sua foto: qui chiudono la sezione pranzo in un
-   pannello a parte. Le foto sono le teglie del banco fotografate dall'alto,
-   ritagliate a cerchio dentro una ciotola (script ciotole.py). */
-export const CONTORNI = {
-  price: "5.00",
-  items: [
-    { id: "melanzane-grigliate", name: "Melanzane grigliate sott'olio", img: "img/prodotti/contorno-melanzane-grigliate.webp", imgSm: "img/prodotti/contorno-melanzane-grigliate-sm.webp" },
-    { id: "carciofini", name: "Carciofini grigliati sott'olio", img: "img/prodotti/contorno-carciofini.webp", imgSm: "img/prodotti/contorno-carciofini-sm.webp" },
-    { id: "friarielli", name: "Friarielli", img: "img/prodotti/contorno-friarielli.webp", imgSm: "img/prodotti/contorno-friarielli-sm.webp" },
-    { id: "funghi", name: "Funghi", img: "img/prodotti/contorno-funghi.webp", imgSm: "img/prodotti/contorno-funghi-sm.webp" },
-    { id: "melanzane-funghetti", name: "Melanzane funghetti", img: "img/prodotti/contorno-melanzane-funghetti.webp", imgSm: "img/prodotti/contorno-melanzane-funghetti-sm.webp" },
-    { id: "zucchine-scapece", name: "Zucchine alla scapece", img: "img/prodotti/contorno-zucchine-scapece.webp", imgSm: "img/prodotti/contorno-zucchine-scapece-sm.webp" },
-    { id: "patate-forno", name: "Patate al forno", img: "img/prodotti/contorno-patate-forno.webp", imgSm: "img/prodotti/contorno-patate-forno-sm.webp" },
   ],
 };
 
