@@ -45,6 +45,7 @@ const SCENES = [
        le mangerebbe l'ultima. La campata piu stretta la riporta al peso di
        PANINI, che di lettere ne ha sei. */
     span: 56,
+    spanMd: 44,
     spanLg: 60,
     name: "Calzoncino fritto",
     price: "5.00",
@@ -59,6 +60,7 @@ const SCENES = [
   {
     id: "panini",
     word: "Panini",
+    spanMd: 54,
     spanLg: 49,
     /* Sotto la parola PANINI ci va un panino del listino, non il Giovannino,
        che sta fra gli sfizi: la parola fa da etichetta alla scena, e se il
@@ -77,6 +79,7 @@ const SCENES = [
     id: "menu",
     /* Una frase, non una parola: due righe composte allo stesso corpo. */
     word: ["Menù e piatti", "del giorno"],
+    spanMd: 56,
     spanLg: 52,
     name: "Menù completo",
     price: "15.00",
@@ -99,6 +102,9 @@ const WORD_SPAN = 66;
    PANINI il 93%, MENU E PIATTI l'89%. Verificate misurando le due sagome da
    1024 a 1920 px. */
 const WORD_SPAN_LG = 49;
+/* Tablet: la parola sta sopra il prodotto, quindi qui il vincolo e l'altezza.
+   Un po' piu piccola che sul telefono, cosi il prodotto ci sta sotto intero. */
+const WORD_SPAN_MD = 54;
 
 /* show: su quali schermi compare. Sul telefono resta solo Finestre, su una
    riga sola: "entro 8 km" e gia scritto nella frase sopra, e lo spazio
@@ -403,13 +409,14 @@ export default function Showcase() {
                 key={sc.id}
                 data-scene
                 {...(i > 0 ? { "data-alt": "" } : {})}
-                className="absolute inset-x-0 top-[17%] text-center md:top-[16%] lg:top-[15%] lg:pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] lg:text-left"
+                className="absolute inset-x-0 top-[17%] pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] text-left md:top-[16%] lg:top-[15%]"
               >
                 <span
                   data-word
-                  className={`inline-block font-display font-extrabold uppercase [font-size:var(--fs)] lg:[font-size:var(--fs-lg)] ${sc.ink}`}
+                  className={`inline-block font-display font-extrabold uppercase [font-size:var(--fs)] md:[font-size:var(--fs-md)] lg:[font-size:var(--fs-lg)] ${sc.ink}`}
                   style={{
                     "--fs": fitWidth(lunga, sc.span ?? WORD_SPAN),
+                    "--fs-md": fitWidth(lunga, sc.spanMd ?? WORD_SPAN_MD),
                     "--fs-lg": fitWidth(lunga, sc.spanLg ?? WORD_SPAN_LG),
                     lineHeight: 0.82,
                     letterSpacing: "-0.045em",
@@ -447,7 +454,7 @@ export default function Showcase() {
         <div
           data-p-tilt
           aria-hidden="true"
-          className="pointer-events-none absolute top-[35%] left-1/2 z-10 w-[min(86vw,30svh)] [@media(max-height:700px)]:top-[33%] [@media(max-height:700px)]:w-[min(86vw,27svh)] max-w-[540px] -translate-x-1/2 -translate-y-1/2 md:top-[42%] md:w-[70vw] md:max-w-[480px] lg:top-[53%] lg:left-auto lg:right-[0.5%] lg:w-[43vw] lg:max-w-[650px] lg:translate-x-0"
+          className="pointer-events-none absolute top-[36%] right-0 z-10 w-[min(86vw,30svh)] [@media(max-height:700px)]:top-[35.5%] [@media(max-height:700px)]:w-[min(86vw,25svh)] max-w-[540px] -translate-y-1/2 md:top-[44%] md:right-[0.5%] md:w-[62vw] md:max-w-[440px] lg:top-[53%] lg:w-[43vw] lg:max-w-[650px]"
         >
           <div data-p-in className="relative">
             {SCENES.map((s, i) => (
