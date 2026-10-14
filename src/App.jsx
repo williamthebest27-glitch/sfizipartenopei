@@ -2,6 +2,8 @@ import Sipario from "./components/Sipario.jsx";
 import SiteHeader from "./components/SiteHeader.jsx";
 import Hero from "./components/Hero.jsx";
 import Showcase from "./components/Showcase.jsx";
+import ChiSiamo from "./components/ChiSiamo.jsx";
+import Allergeni from "./components/Allergeni.jsx";
 import SiteFooter from "./components/SiteFooter.jsx";
 
 /* Il sipario sta solo qui, sulla home: e l'ingresso del sito, non un dazio da
@@ -15,6 +17,8 @@ export default function App() {
       <main>
         <Hero />
         <Showcase />
+        <ChiSiamo />
+        <Allergeni />
       </main>
       <SiteFooter />
     </>

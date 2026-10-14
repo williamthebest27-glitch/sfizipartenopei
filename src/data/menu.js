@@ -192,6 +192,51 @@ export const PRODUCTS = {
 export const ALLERGENI =
   "Se hai allergie o intolleranze alimentari chiedici pure informazioni sul nostro cibo e sulle nostre bevande: siamo preparati per consigliarti nel migliore dei modi.";
 
+/* Lo stesso avviso nelle quattro lingue, parola per parola dal sito del
+   cliente: sta in fondo alla home (components/Allergeni.jsx). `lang` va
+   sull'elemento, cosi i lettori di schermo cambiano pronuncia. */
+export const ALLERGENI_LINGUE = [
+  {
+    lang: "it",
+    lingua: "Italiano",
+    testo:
+      "Caro ospite/cliente, se hai delle allergie e/o intolleranze alimentari chiedi pure informazioni sul nostro cibo e sulle nostre bevande. Siamo preparati per consigliarti nel migliore dei modi.",
+  },
+  {
+    lang: "en",
+    lingua: "English",
+    testo:
+      "Dear guest/customer, if you have any food allergies and/or intolerances, please feel free to ask us about our food and beverages. We are prepared to advise you in the best possible way.",
+  },
+  {
+    lang: "fr",
+    lingua: "Français",
+    testo:
+      "Cher hôte/client, si vous avez des allergies et/ou des intolérances alimentaires, n'hésitez pas à nous demander des informations sur nos plats et nos boissons. Nous sommes prêts à vous conseiller du mieux possible.",
+  },
+  {
+    lang: "de",
+    lingua: "Deutsch",
+    testo:
+      "Lieber Gast/Kunde, wenn Sie Lebensmittelallergien und/oder -unverträglichkeiten haben, fragen Sie uns bitte nach Informationen zu unseren Speisen und Getränken. Wir sind darauf vorbereitet, Sie bestmöglich zu beraten.",
+  },
+];
+
+/* "Chi siamo" della home, testo del cliente dal suo sito, diviso in racconto
+   e chiusa (la chiusa e messa in evidenza). Sul vecchio sito sotto c'era
+   "Prenota adesso": qui no, perche non si prenota niente. */
+export const CHI_SIAMO = {
+  racconto:
+    "Sfizi Partenopei è nato dalla passione per la cucina e dalla volontà di condividere con gli altri i sapori autentici della tradizione partenopea. Con un'atmosfera accogliente e piatti genuini, ti aspettiamo per farti vivere un'esperienza culinaria unica nel cuore di Lugano.",
+  chiusa: "Tutti i giorni menu e sfizi partenopei alla portata di tutti.",
+};
+
+/* Provenienza, come la scrive il cliente: "Carne CH, Pane CH". */
+export const PROVENIENZA = [
+  { cosa: "Carne", da: "Svizzera" },
+  { cosa: "Pane", da: "Svizzero" },
+];
+
 /* Contatti e informazioni di servizio, tutti verificati sul sito live. */
 export const INFO = {
   tel: "+41784065676",
