@@ -69,9 +69,96 @@ html[data-sipario] {
   overflow: hidden;
 }
 
+/* Tailwind 4 ha tolto la manina dai pulsanti: qui torna, perche sul sito
+   ogni <button> e un'azione (modulo, banner dei cookie, "Gestisci cookie"). */
+@layer base {
+  button:not(:disabled),
+  [role="switch"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-blu-600);
   outline-offset: 4px;
+}
+
+/* Testo lungo delle pagine legali. Una classe sul contenitore invece di una
+   decina di utility su ogni paragrafo: sono pagine di sola lettura, e cosi i
+   documenti in components/legale restano JSX pulito. In @layer components,
+   quindi una utility sul singolo elemento vince sempre. */
+@layer components {
+  .prosa {
+    color: var(--color-blu-800);
+    font-size: clamp(0.98rem, 0.94rem + 0.18vw, 1.06rem);
+    line-height: 1.75;
+  }
+
+  .prosa > * + * {
+    margin-top: 1em;
+  }
+
+  .prosa h3 {
+    margin-top: 1.9em;
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-blu-950);
+  }
+
+  .prosa h3 + * {
+    margin-top: 0.5em;
+  }
+
+  .prosa strong {
+    font-weight: 600;
+    color: var(--color-blu-950);
+  }
+
+  .prosa a {
+    color: var(--color-blu-700);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--color-blu-300);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+    transition:
+      color 0.3s var(--ease-hero),
+      text-decoration-color 0.3s var(--ease-hero);
+  }
+
+  .prosa a:hover {
+    color: var(--color-blu-950);
+    text-decoration-color: var(--color-blu-600);
+  }
+
+  .prosa ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .prosa ul > li {
+    position: relative;
+    padding-left: 1.5em;
+  }
+
+  .prosa ul > li + li {
+    margin-top: 0.55em;
+  }
+
+  .prosa ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    top: 0.82em;
+    width: 0.6em;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-blu-500);
+  }
 }
 
 /* Con prefers-reduced-motion il carosello della hero non parte: GSAP non gira

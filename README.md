@@ -71,6 +71,25 @@ prende il **minimo** dei tre canali RGB, non la media: il fondo bianco ha tutti
 e tre i canali alti, un pane dorato no, ed e l'unico modo perche i pani chiari e
 le patate non vengano ritagliati via a morsi.
 
+## Pagine legali e cookie
+
+`/privacy-policy`, `/cookie-policy`, `/termini-e-condizioni` e `/impressum`,
+linkate dal pie di tutte le pagine. Un solo ingresso (`src/legale.jsx`): l'HTML
+sceglie il documento con `data-doc`. I testi stanno in
+`src/components/legale/`, i dati della societa (ragione sociale, sede legale,
+IVA, data di aggiornamento) in `src/data/legale.js`.
+
+I testi descrivono quello che il sito fa davvero (hosting Vercel, Google Fonts,
+modulo che apre il programma di posta, mappa disegnata da noi). Se si aggiunge
+un servizio esterno vanno aggiornati privacy e cookie policy.
+
+Il banner dei cookie (`CookieBanner.jsx`, montato da `SiteFooter`) salva le
+scelte in `localStorage` per 12 mesi; «Gestisci cookie» nel pie lo riapre. Oggi
+non c'e niente di facoltativo da bloccare. Per aggiungere uno strumento di
+statistica: caricarlo dentro `quandoConsentito("statistiche", ...)` di
+`src/lib/consenso.js`, alzare `VERSIONE` nello stesso file (il banner torna a
+chiedere a tutti) e aggiungerne la voce nella cookie policy.
+
 ## Pubblicazione
 
 Il sito è su Vercel, progetto `sfizi-partenopei`, collegato a questo

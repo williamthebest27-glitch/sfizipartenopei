@@ -128,6 +128,30 @@ export function FacebookGlyph({ size = 16 }) {
   );
 }
 
+/* Il biscotto col morso del banner dei cookie. */
+export function CookieGlyph({ size = 16 }) {
+  return (
+    <Svg size={size}>
+      <path
+        d="M20.4 12.2a8.4 8.4 0 1 1-8.6-8.6 3.2 3.2 0 0 0 3.4 3.6 3.2 3.2 0 0 0 3.6 3.6 2.4 2.4 0 0 0 1.6 1.4Z"
+        {...stroke}
+      />
+      <circle cx="8.6" cy="10" r="1" fill="currentColor" stroke="none" />
+      <circle cx="13" cy="12.6" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9.4" cy="15.4" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="16.6" r="1" fill="currentColor" stroke="none" />
+    </Svg>
+  );
+}
+
+export function CloseGlyph({ size = 16 }) {
+  return (
+    <Svg size={size}>
+      <path d="m6 6 12 12M18 6 6 18" {...stroke} strokeWidth="1.8" />
+    </Svg>
+  );
+}
+
 /* --------------------------------------------------------------------------
    Marchi di categoria. Vivono grandi e sbiaditi dentro le card senza foto:
    riempiono lo slot con qualcosa di disegnato invece di lasciarlo vuoto.

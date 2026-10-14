@@ -21,6 +21,11 @@ export default defineConfig({
         contatti: resolve(__dirname, "contatti.html"),
         // la dashboard del cliente per la sezione pranzo (vedi api/)
         gestione: resolve(__dirname, "gestione-pranzo.html"),
+        // le quattro pagine legali, linkate dal pie (un solo bundle: src/legale.jsx)
+        privacy: resolve(__dirname, "privacy-policy.html"),
+        cookie: resolve(__dirname, "cookie-policy.html"),
+        termini: resolve(__dirname, "termini-e-condizioni.html"),
+        impressum: resolve(__dirname, "impressum.html"),
       },
     },
   },
