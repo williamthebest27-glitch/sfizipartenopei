@@ -67,7 +67,7 @@ export default function ChiSiamo() {
           </h2>
           <p
             data-item
-            className="mt-1 font-script text-[clamp(1.6rem,3vw,2.6rem)] leading-[1.15] text-blu-600"
+            className="mt-1 font-script text-[clamp(2.6rem,7vw,4.4rem)] leading-[1.05] text-blu-600"
           >
             la nostra storia
           </p>
