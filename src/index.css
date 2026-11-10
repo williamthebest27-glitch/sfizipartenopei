@@ -69,6 +69,28 @@ html[data-sipario] {
   overflow: hidden;
 }
 
+/* Il banner in evidenza (Evento.jsx): stessa regola finche la locandina e
+   aperta. La barra resta prenotata dallo scrollbar-gutter, quindi niente
+   salto quando si chiude. */
+html[data-evento] {
+  overflow: hidden;
+}
+
+/* La locandina entra sempre intera: larga quanto la colonna, o quanto
+   l'altezza libera per il suo rapporto, la minore delle due. --riserva e lo
+   spazio verticale gia preso da titoletto, X, pulsanti e margini. */
+[data-evento-dialogo] {
+  --riserva: calc(160px + env(safe-area-inset-top) + env(safe-area-inset-bottom));
+}
+@media (min-width: 40rem) {
+  [data-evento-dialogo] {
+    --riserva: calc(184px + env(safe-area-inset-bottom));
+  }
+}
+[data-evento-dialogo] [data-poster] {
+  width: min(100%, calc((100svh - var(--riserva)) * var(--rapporto)));
+}
+
 /* Tailwind 4 ha tolto la manina dai pulsanti: qui torna, perche sul sito
    ogni <button> e un'azione (modulo, banner dei cookie, "Gestisci cookie"). */
 @layer base {

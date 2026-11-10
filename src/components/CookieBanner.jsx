@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { quandoEntraIlSito } from "../lib/intro.js";
+import { dopoEvento } from "../lib/evento.js";
 import {
   CATEGORIE,
   leggiConsenso,
@@ -122,15 +123,20 @@ export default function CookieBanner() {
     chiudi();
   }
 
-  /* Prima visita (o scelte scadute): si presenta da solo, dopo il sipario. */
+  /* Prima visita (o scelte scadute): si presenta da solo, dopo il sipario e,
+     sulla home, dopo la locandina in evidenza se ce n'e una (lib/evento.js). */
   useEffect(() => {
     if (leggiConsenso()) return;
     let timer = 0;
+    let staccaEvento = () => {};
     const stacca = quandoEntraIlSito(() => {
-      timer = window.setTimeout(() => apri("sintesi", false), RITARDO);
+      staccaEvento = dopoEvento(() => {
+        timer = window.setTimeout(() => apri("sintesi", false), RITARDO);
+      });
     });
     return () => {
       stacca();
+      staccaEvento();
       window.clearTimeout(timer);
     };
   }, []);

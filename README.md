@@ -90,6 +90,25 @@ statistica: caricarlo dentro `quandoConsentito("statistiche", ...)` di
 `src/lib/consenso.js`, alzare `VERSIONE` nello stesso file (il banner torna a
 chiedere a tutti) e aggiungerne la voce nella cookie policy.
 
+## Banner in evidenza (locandina sulla home)
+
+Dalla dashboard (`/gestione`, sezione «Banner in evidenza») il cliente carica
+una locandina: eventi, offerte, chiusure. Sulla home si apre prima il sito con
+la sua entrata, poi, 2,3 s dopo, la locandina sale a tutto schermo, intera e
+mai ritagliata, su un fondo che è la locandina stessa sfocata. Si chiude con la
+X, con Esc, con «Vai al sito» o cliccando il fondo; in una scheda la si vede una
+volta sola (sessionStorage). Il banner dei cookie aspetta che sia chiusa.
+
+- Regia e tempi: `src/lib/evento.js`; locandina: `src/components/Evento.jsx`;
+  dati e validazione condivisa: `src/data/banner.js`.
+- API: `api/banner.js` (GET pubblico, PUT con la password della dashboard) e
+  `api/banner-foto.js` (upload). Archivio Blob: `banner/attuale.json`,
+  `banner/versioni/`, `banner/foto/`, stesso schema del pranzo.
+- Finché il cliente non salva, vale `BANNER_DEFAULT`, la locandina
+  dell'Aperitivo di Natale in `public/img/eventi/`, che si spegne da sola
+  dopo il 23 dicembre 2026.
+- `/?evento` la mostra anche a chi l'ha già vista (link «Vedi sul sito»).
+
 ## Pubblicazione
 
 Il sito è su Vercel, progetto `sfizi-partenopei`, collegato a questo

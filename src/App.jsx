@@ -1,4 +1,8 @@
 import Sipario from "./components/Sipario.jsx";
+/* dopo il sipario: il suo modulo deve essersi gia prenotato quando quello del
+   banner in evidenza si mette in coda per l'entrata della home (lib/intro.js),
+   se no la locandina partirebbe a tempo da subito, sotto il telo */
+import Evento from "./components/Evento.jsx";
 import SiteHeader from "./components/SiteHeader.jsx";
 import Hero from "./components/Hero.jsx";
 import Showcase from "./components/Showcase.jsx";
@@ -13,6 +17,7 @@ export default function App() {
   return (
     <>
       <Sipario />
+      <Evento />
       <SiteHeader current="/" />
       <main>
         <Hero />
