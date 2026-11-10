@@ -19,8 +19,8 @@ export default defineConfig({
         index: resolve(__dirname, "index.html"),
         prodotti: resolve(__dirname, "i-nostri-prodotti.html"),
         contatti: resolve(__dirname, "contatti.html"),
-        // la dashboard del cliente per la sezione pranzo (vedi api/)
-        gestione: resolve(__dirname, "gestione-pranzo.html"),
+        // la dashboard del cliente: il banner in evidenza della home (vedi api/)
+        gestione: resolve(__dirname, "gestione.html"),
         // le quattro pagine legali, linkate dal pie (un solo bundle: src/legale.jsx)
         privacy: resolve(__dirname, "privacy-policy.html"),
         cookie: resolve(__dirname, "cookie-policy.html"),

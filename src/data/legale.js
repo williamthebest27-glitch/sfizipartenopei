@@ -33,7 +33,7 @@ export const SITO = "www.sfizipartenopeilugano.ch";
 
 /* Data in testa a tutti e quattro i documenti. Va aggiornata quando se ne
    cambia il contenuto, non quando si ritocca la grafica. */
-export const AGGIORNATO = "14 ottobre 2026";
+export const AGGIORNATO = "10 novembre 2026";
 
 /* Le quattro pagine, nell'ordine in cui compaiono nel pie. Gli href sono gli
    indirizzi puliti (cleanUrls su Vercel), come per il resto del sito. */

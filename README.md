@@ -4,8 +4,14 @@ Sito di [Sfizi Partenopei](https://www.sfizipartenopeilugano.ch) — paninoteca 
 fritti napoletani a Viganello (Lugano).
 
 Tre pagine statiche: la home con il sipario d'ingresso e la vetrina dei prodotti
-guidata dallo scroll, `I nostri prodotti` con il listino diviso in pranzo, sfizi,
-panini (con i panini menù) e bevande, e `Contatti` col modulo.
+guidata dallo scroll, `I nostri prodotti` con il listino diviso in sfizi, panini
+(con i panini menù) e bevande, e `Contatti` col modulo. In più la dashboard del
+cliente, `/gestione`, per il banner in evidenza della home.
+
+La sezione **Pranzo** (piatti, menù completo, contorni, con la sua parte della
+dashboard e le API `api/pranzo*`) è stata tolta definitivamente il 10 novembre
+2026, su richiesta del cliente. Il vecchio indirizzo `/pranzo` porta alla pagina
+prodotti, `/gestione-pranzo` a `/gestione`.
 
 ## Stack
 
@@ -103,7 +109,13 @@ volta sola (sessionStorage). Il banner dei cookie aspetta che sia chiusa.
   dati e validazione condivisa: `src/data/banner.js`.
 - API: `api/banner.js` (GET pubblico, PUT con la password della dashboard) e
   `api/banner-foto.js` (upload). Archivio Blob: `banner/attuale.json`,
-  `banner/versioni/`, `banner/foto/`, stesso schema del pranzo.
+  `banner/versioni/`, `banner/foto/`. Ogni salvataggio scrive anche una
+  versione datata, perché un file sovrascritto su Blob resta servito vecchio
+  per circa un minuto: la dashboard legge quella (`?fresco=1`), la home il file
+  fisso.
+- Accesso: `api/accesso.js`, password nella variabile `PRANZO_PASSWORD` del
+  progetto Vercel (il nome viene dalla vecchia dashboard del pranzo), mandata
+  nell'intestazione `x-gestione-password`.
 - Finché il cliente non salva, vale `BANNER_DEFAULT`, la locandina
   dell'Aperitivo di Natale in `public/img/eventi/`, che si spegne da sola
   dopo il 23 dicembre 2026.
@@ -136,12 +148,7 @@ repository sia dall'upload: non va mai caricato.
 - **Panini menù**: sul sito del cliente c'è solo il prezzo (15.00). Che siano
   «panino, patatine e bibita» è quello che si vede nelle fotografie che ha
   mandato lui.
-- I **doppi prezzi del pranzo** (gnocchi 8/12, frittata 9/12): non è chiaro a
-  cosa corrispondano i due importi.
-- I **contorni** sono una card sola a 5.00; sul sito live sono sette voci
-  separate (melanzane grigliate, carciofini, friarielli, funghi, melanzane a
-  funghetti, zucchine alla scapece, patate al forno), tutte a 5.00.
-- Le **descrizioni dei piatti** sono scritte solo dove il nome definisce il
+- Le **descrizioni dei prodotti** sono scritte solo dove il nome definisce il
   piatto; dove servirebbe inventare ingredienti sono lasciate vuote.
 - Le zone di consegna: la pagina `/pranzo` del sito live aggiunge **Massagno**,
   le altre no.

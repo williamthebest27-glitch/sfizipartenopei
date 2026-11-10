@@ -77,8 +77,7 @@ export default {
             momento dell'ordine, che ti confermiamo al telefono o al banco.
           </p>
           <p>
-            Il menu del pranzo cambia di giorno in giorno ed è servito fino a esaurimento. Anche sfizi, panini e
-            bevande dipendono dalla disponibilità del momento.
+            Sfizi, panini e bevande dipendono dalla disponibilità del momento.
           </p>
           <p>
             Le fotografie e le immagini hanno scopo illustrativo: aspetto, dimensioni e presentazione del prodotto

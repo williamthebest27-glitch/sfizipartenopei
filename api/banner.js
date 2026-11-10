@@ -3,8 +3,8 @@
         { salvato: false } finche non ha mai salvato: la home usa BANNER_DEFAULT.
    PUT  con la password: salva il banner nuovo, poi fa pulizia.
 
-   Stesso schema di /api/pranzo, per la stessa ragione: un file sovrascritto
-   su Vercel Blob resta servito vecchio per circa un minuto. La home legge il
+   Un file sovrascritto su Vercel Blob resta servito vecchio per circa un
+   minuto, anche chiedendolo senza cache (misurato). La home legge il
    file fisso (banner/attuale.json, economico), la dashboard con ?fresco=1
    legge l'ultima versione datata (banner/versioni/<data>.json, nome nuovo e
    quindi mai in cache). */

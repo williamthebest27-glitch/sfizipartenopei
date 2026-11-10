@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { PRANZO_DEFAULT, LIMITI, pulisciPranzo, isFotoCaricata } from "../data/pranzo.js";
 import {
   BANNER_DEFAULT,
   BANNER_VUOTO,
@@ -13,21 +12,23 @@ import {
 /* ===========================================================================
    Gestione sito — la dashboard del cliente
    ---------------------------------------------------------------------------
-   Una pagina sola, per il telefono prima che per il computer: il cliente
-   cambia il pranzo dal banco. Modifica due cose: il banner in evidenza della
-   home (una locandina a tutto schermo per eventi e offerte) e la sezione
-   pranzo (piatti, menù completo, contorni, testo d'apertura). Il resto del
-   sito non e raggiungibile da qui. Un solo pulsante «Salva» per tutte e due:
-   parte solo la parte che e cambiata.
+   Una pagina sola, per il telefono prima che per il computer. Il cliente
+   modifica il banner in evidenza della home: una locandina a tutto schermo
+   per eventi, offerte, chiusure. Il resto del sito non e raggiungibile da qui.
 
-   Accesso: una password, controllata dal server (/api/pranzo-accesso) e
-   tenuta in sessionStorage finche la scheda resta aperta. Le foto vengono
-   ridimensionate qui nel browser (lato lungo 1600 px, WebP) prima di partire:
-   una foto da telefono di 5 MB diventa ~250 KB e il caricamento e veloce
-   anche col 4G del banco.
+   Fino al 10 novembre 2026 da qui si gestiva anche la sezione Pranzo della
+   pagina prodotti (piatti, menù completo, contorni): tolta definitivamente su
+   richiesta del cliente, con le sue API.
+
+   Accesso: una password, controllata dal server (/api/accesso) e tenuta in
+   sessionStorage finche la scheda resta aperta. La locandina viene
+   ridimensionata qui nel browser (lato lungo 2000 px, WebP) prima di partire:
+   una foto da telefono di 5 MB diventa poche centinaia di KB e il caricamento
+   e veloce anche col 4G del banco.
    =========================================================================== */
 
-const CHIAVE = "sfizi-pranzo-pw";
+const CHIAVE = "sfizi-gestione-pw";
+const INTESTAZIONE = "x-gestione-password";
 const leggi = () => {
   try {
     return sessionStorage.getItem(CHIAVE) || "";
@@ -42,8 +43,6 @@ const scrivi = (v) => {
     /* navigazione privata: si rientra con la password a ogni apertura */
   }
 };
-
-const nuovoId = (pref) => `${pref}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
 async function apriImmagine(file) {
   try {
@@ -81,14 +80,10 @@ async function comprimi(c, qualita) {
   return blob;
 }
 
-async function preparaFoto(file) {
-  return comprimi(ridisegna(await apriImmagine(file), 1600), 0.82);
-}
-
-/* La locandina: piu grande e meno compressa delle foto dei piatti, perche e
-   piena di scritte e sul sito e alta quanto lo schermo. In piu le sue misure
-   (la home le usa per riservare lo spazio) e una copia da 32 px in JPEG, che
-   sul sito fa da fondo sfocato. */
+/* La locandina: grande e poco compressa, perche e piena di scritte e sul sito
+   e alta quanto lo schermo. In piu le sue misure (la home le usa per
+   riservare lo spazio) e una copia da 32 px in JPEG, che sul sito fa da fondo
+   sfocato. */
 async function preparaLocandina(file) {
   const src = await apriImmagine(file);
   const c = ridisegna(src, 2000);
@@ -121,25 +116,6 @@ function Campo({ label, hint, children, max, value }) {
   );
 }
 
-function Prezzo({ label, value, onChange, placeholder = "0.00" }) {
-  return (
-    <Campo label={label}>
-      <span className="relative block">
-        <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[0.7rem] font-semibold tracking-[0.12em] text-blu-600">
-          CHF
-        </span>
-        <input
-          className={`${input} pl-12 tabular-nums`}
-          inputMode="decimal"
-          value={value}
-          placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </span>
-    </Campo>
-  );
-}
-
 function Mini({ onClick, label, children, disabled, danger }) {
   return (
     <button
@@ -156,75 +132,6 @@ function Mini({ onClick, label, children, disabled, danger }) {
     >
       {children}
     </button>
-  );
-}
-
-/* Foto: miniatura cliccabile, caricamento, rimozione. */
-function Foto({ img, tonda, onChange, password, onErrore, onCarica }) {
-  const file = useRef(null);
-  const [carica, setCarica] = useState(false);
-
-  async function scegli(e) {
-    const f = e.target.files?.[0];
-    e.target.value = "";
-    if (!f) return;
-    setCarica(true);
-    onCarica(1);
-    try {
-      const blob = await preparaFoto(f);
-      const r = await fetch("api/pranzo-foto", {
-        method: "POST",
-        headers: { "content-type": blob.type, "x-pranzo-password": password },
-        body: blob,
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.errore || "Caricamento non riuscito.");
-      onChange(d.url);
-    } catch (err) {
-      onErrore(err.message || "Caricamento non riuscito.");
-    } finally {
-      setCarica(false);
-      onCarica(-1);
-    }
-  }
-
-  const forma = tonda ? "rounded-full" : "rounded-2xl";
-  return (
-    <div className="flex shrink-0 flex-col items-center gap-2">
-      <button
-        type="button"
-        onClick={() => file.current?.click()}
-        className={`group relative h-24 w-24 overflow-hidden border border-blu-200 bg-blu-50 transition hover:border-blu-600 ${forma}`}
-        aria-label={img ? "Cambia foto" : "Aggiungi foto"}
-      >
-        {img ? (
-          <img
-            src={img}
-            alt=""
-            className={`h-full w-full ${isFotoCaricata(img) ? "object-cover" : "object-contain p-1"}`}
-          />
-        ) : (
-          <span className="flex h-full w-full flex-col items-center justify-center gap-1 text-blu-600">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-              <path d="M4 8h3l2-3h6l2 3h3v11H4z" strokeLinejoin="round" />
-              <circle cx="12" cy="13" r="3.5" />
-            </svg>
-            <span className="text-[0.66rem] font-semibold">Foto</span>
-          </span>
-        )}
-        {carica && (
-          <span className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <span className="h-6 w-6 animate-spin rounded-full border-2 border-blu-200 border-t-blu-600" />
-          </span>
-        )}
-      </button>
-      <input ref={file} type="file" accept="image/*" className="hidden" onChange={scegli} />
-      {img && !carica && (
-        <button type="button" onClick={() => onChange(null)} className="text-[0.7rem] font-semibold text-blu-700 underline-offset-2 hover:underline">
-          Togli foto
-        </button>
-      )}
-    </div>
   );
 }
 
@@ -311,7 +218,7 @@ function BannerEditor({ banner: b, set, password, onErrore, onCarica }) {
       const { blob, w, h, anteprima } = await preparaLocandina(f);
       const r = await fetch("api/banner-foto", {
         method: "POST",
-        headers: { "content-type": blob.type, "x-pranzo-password": password },
+        headers: { "content-type": blob.type, [INTESTAZIONE]: password },
         body: blob,
       });
       const d = await r.json().catch(() => ({}));
@@ -479,7 +386,7 @@ function Accesso({ onEntra }) {
     setAttesa(true);
     setErrore("");
     try {
-      const r = await fetch("api/pranzo-accesso", { method: "POST", headers: { "x-pranzo-password": pw } });
+      const r = await fetch("api/accesso", { method: "POST", headers: { [INTESTAZIONE]: pw } });
       if (r.ok) onEntra(pw);
       else setErrore(r.status === 401 ? "Password sbagliata." : "Il server non risponde, riprova tra poco.");
     } catch {
@@ -497,7 +404,7 @@ function Accesso({ onEntra }) {
           Gestione sito
         </h1>
         <p className="mt-2 text-[0.9rem] leading-relaxed text-blu-700">
-          Il banner in evidenza della home e la sezione pranzo: piatti, prezzi, foto e contorni.
+          Il banner in evidenza della home: la locandina per eventi, offerte e chiusure.
         </p>
         <label className="mt-6 block">
           <span className="mb-1.5 block text-[0.78rem] font-semibold text-blu-800">Password</span>
@@ -526,49 +433,27 @@ function Accesso({ onEntra }) {
 /* --------------------------------------------------------------------------
    Editor
    -------------------------------------------------------------------------- */
-function sposta(arr, i, d) {
-  const j = i + d;
-  if (j < 0 || j >= arr.length) return arr;
-  const a = arr.slice();
-  [a[i], a[j]] = [a[j], a[i]];
-  return a;
-}
+const quando = (iso) =>
+  new Date(iso).toLocaleString("it-CH", { dateStyle: "medium", timeStyle: "short" });
 
-export default function PranzoAdmin() {
+export default function GestioneSito() {
   const [password, setPassword] = useState(leggi);
-  const [dati, setDati] = useState(null);
-  const [salvati, setSalvati] = useState(null); // ultima versione salvata, per sapere se ci sono modifiche
+  const [banner, setBanner] = useState(null);
+  const [salvato, setSalvato] = useState(null); // ultima versione salvata, per sapere se ci sono modifiche
   const [stato, setStato] = useState({ tipo: "", msg: "" });
   const [salva, setSalva] = useState(false);
-  /* foto in caricamento: finche ce n'e una, non si salva (si salverebbe la
-     foto vecchia e quella nuova arriverebbe dopo, come modifica a parte) */
+  /* locandina in caricamento: finche non e arrivata, non si salva (si
+     salverebbe quella vecchia e la nuova arriverebbe dopo, come modifica a
+     parte) */
   const [inCarico, setInCarico] = useState(0);
   const onCarica = (d) => setInCarico((n) => Math.max(0, n + d));
-  // il banner in evidenza: stesso schema, file a parte (api/banner)
-  const [banner, setBanner] = useState(null);
-  const [bannerSalvato, setBannerSalvato] = useState(null);
 
-  // carica i contenuti attuali (senza cache) appena si entra
+  /* carica il banner attuale (senza cache) appena si entra.
+     { salvato: false } = mai salvato: vale il banner di partenza, lo stesso
+     che mostra il sito */
   useEffect(() => {
     if (!password) return;
     let vivo = true;
-    fetch("api/pranzo?fresco=1", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!vivo) return;
-        const base = d && Array.isArray(d.piatti) ? d : PRANZO_DEFAULT;
-        const { aggiornato, ...resto } = base;
-        setDati(resto);
-        setSalvati(JSON.stringify(resto));
-        if (aggiornato) setStato({ tipo: "", msg: `Ultimo salvataggio: ${new Date(aggiornato).toLocaleString("it-CH", { dateStyle: "medium", timeStyle: "short" })}` });
-      })
-      .catch(() => {
-        if (!vivo) return;
-        setDati(PRANZO_DEFAULT);
-        setSalvati(JSON.stringify(PRANZO_DEFAULT));
-      });
-    /* { salvato: false } = mai salvato: vale il banner di partenza, lo stesso
-       che mostra il sito */
     fetch("api/banner?fresco=1", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
@@ -576,21 +461,20 @@ export default function PranzoAdmin() {
         const { aggiornato, ...resto } = d && typeof d === "object" && "attivo" in d ? d : BANNER_DEFAULT;
         const b = { ...BANNER_VUOTO, ...resto };
         setBanner(b);
-        setBannerSalvato(JSON.stringify(b));
+        setSalvato(JSON.stringify(b));
+        if (aggiornato) setStato({ tipo: "", msg: `Ultimo salvataggio: ${quando(aggiornato)}` });
       })
       .catch(() => {
         if (!vivo) return;
         setBanner(BANNER_DEFAULT);
-        setBannerSalvato(JSON.stringify(BANNER_DEFAULT));
+        setSalvato(JSON.stringify(BANNER_DEFAULT));
       });
     return () => {
       vivo = false;
     };
   }, [password]);
 
-  const pranzoModificato = dati && salvati !== JSON.stringify(dati);
-  const bannerModificato = banner && bannerSalvato !== JSON.stringify(banner);
-  const modificato = pranzoModificato || bannerModificato;
+  const modificato = banner && salvato !== JSON.stringify(banner);
 
   // avviso se si chiude la pagina con modifiche non salvate
   useEffect(() => {
@@ -614,7 +498,7 @@ export default function PranzoAdmin() {
     );
   }
 
-  if (!dati || !banner) {
+  if (!banner) {
     return (
       <main className="flex min-h-[100svh] items-center justify-center">
         <span className="h-8 w-8 animate-spin rounded-full border-2 border-blu-200 border-t-blu-600" aria-label="Caricamento" />
@@ -622,43 +506,19 @@ export default function PranzoAdmin() {
     );
   }
 
-  const set = (fn) => setDati((d) => fn(structuredClone(d)));
   const setB = (fn) => setBanner((b) => fn(structuredClone(b)));
   const errore = (msg) => setStato({ tipo: "errore", msg });
   const esci = () => {
     if (modificato && !window.confirm("Ci sono modifiche non salvate. Uscire lo stesso?")) return;
     scrivi("");
     setPassword("");
-    setDati(null);
     setBanner(null);
   };
 
-  /* Un PUT per parte, solo per quella che e cambiata. Prima si controllano
-     tutte e due, cosi un errore nel pranzo non lascia salvato a meta il
-     banner (o viceversa). */
-  async function invia(url, corpo) {
-    const r = await fetch(url, {
-      method: "PUT",
-      headers: { "content-type": "application/json", "x-pranzo-password": password },
-      body: JSON.stringify(corpo),
-    });
-    const d = await r.json().catch(() => ({}));
-    if (r.status === 401) {
-      const e = new Error("Password non più valida.");
-      e.fuori = true;
-      throw e;
-    }
-    if (!r.ok) throw new Error(d.errore || "Salvataggio non riuscito.");
-    const { aggiornato, ...resto } = d;
-    return resto;
-  }
-
   async function salvaTutto() {
-    let pranzoPulito = null;
-    let bannerPulito = null;
+    let pulito;
     try {
-      if (bannerModificato) bannerPulito = pulisciBanner(banner);
-      if (pranzoModificato) pranzoPulito = pulisciPranzo(dati);
+      pulito = pulisciBanner(banner);
     } catch (e) {
       errore(e.message);
       return;
@@ -666,23 +526,24 @@ export default function PranzoAdmin() {
     setSalva(true);
     setStato({ tipo: "", msg: "Salvataggio…" });
     try {
-      if (bannerPulito) {
-        const b = { ...BANNER_VUOTO, ...(await invia("api/banner", bannerPulito)) };
-        setBanner(b);
-        setBannerSalvato(JSON.stringify(b));
-      }
-      if (pranzoPulito) {
-        const resto = await invia("api/pranzo", pranzoPulito);
-        setDati(resto);
-        setSalvati(JSON.stringify(resto));
-      }
-      setStato({ tipo: "ok", msg: "Salvato. Sul sito entro un paio di minuti." });
-    } catch (e) {
-      if (e.fuori) {
+      const r = await fetch("api/banner", {
+        method: "PUT",
+        headers: { "content-type": "application/json", [INTESTAZIONE]: password },
+        body: JSON.stringify(pulito),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.status === 401) {
         scrivi("");
         setPassword("");
         return;
       }
+      if (!r.ok) throw new Error(d.errore || "Salvataggio non riuscito.");
+      const { aggiornato, ...resto } = d;
+      const b = { ...BANNER_VUOTO, ...resto };
+      setBanner(b);
+      setSalvato(JSON.stringify(b));
+      setStato({ tipo: "ok", msg: "Salvato. Sul sito entro un paio di minuti." });
+    } catch (e) {
       errore(e.message || "Salvataggio non riuscito.");
     } finally {
       setSalva(false);
@@ -716,161 +577,6 @@ export default function PranzoAdmin() {
 
       <main className="mx-auto flex max-w-[760px] flex-col gap-4 px-4 pt-5 sm:gap-5">
         <BannerEditor banner={banner} set={setB} password={password} onErrore={errore} onCarica={onCarica} />
-
-        <h2 className="mt-4 px-1 font-display text-[0.8rem] font-bold tracking-[0.14em] text-blu-600 uppercase">
-          Sezione pranzo
-        </h2>
-
-        <Sezione titolo="Testo d'apertura" sotto="La frase sotto il titolo «Pranzo».">
-          <p className="-mt-2 mb-3 text-[0.78rem] text-blu-700">
-            <a href="/i-nostri-prodotti#pranzo" target="_blank" rel="noopener" className="font-semibold text-blu-800 underline underline-offset-2">
-              Vedi il pranzo sul sito ↗
-            </a>
-          </p>
-          <Campo label="Testo" max={LIMITI.lead} value={dati.lead}>
-            <textarea
-              rows={3}
-              className={`${input} resize-y`}
-              value={dati.lead}
-              onChange={(e) => set((d) => ((d.lead = e.target.value), d))}
-            />
-          </Campo>
-        </Sezione>
-
-        <Sezione
-          titolo="Piatti"
-          sotto="L'ordine qui è l'ordine sul sito."
-          azione={
-            <Mini
-              label="Aggiungi piatto"
-              disabled={dati.piatti.length >= LIMITI.piatti}
-              onClick={() =>
-                set((d) => (d.piatti.push({ id: nuovoId("piatto"), name: "", desc: "", price: "", price2: "", img: null }), d))
-              }
-            >
-              + Piatto
-            </Mini>
-          }
-        >
-          {dati.piatti.length === 0 && (
-            <p className="rounded-xl bg-blu-50 p-4 text-[0.88rem] text-blu-700">Nessun piatto: aggiungine uno con «+ Piatto».</p>
-          )}
-          <ol className="flex flex-col gap-3">
-            {dati.piatti.map((p, i) => (
-              <li key={p.id} className="rounded-2xl border border-blu-100 p-3 sm:p-4">
-                <div className="flex gap-3 sm:gap-4">
-                  <Foto
-                    img={p.img}
-                    password={password}
-                    onErrore={errore}
-                    onCarica={onCarica}
-                    onChange={(url) => set((d) => ((d.piatti[i].img = url), d))}
-                  />
-                  <div className="flex min-w-0 flex-1 flex-col gap-3">
-                    <Campo label="Nome del piatto" max={LIMITI.nome} value={p.name}>
-                      <input className={input} value={p.name} onChange={(e) => set((d) => ((d.piatti[i].name = e.target.value), d))} />
-                    </Campo>
-                  </div>
-                </div>
-                <div className="mt-3 flex flex-col gap-3">
-                  <Campo label="Descrizione (facoltativa)" max={LIMITI.desc} value={p.desc}>
-                    <textarea rows={2} className={`${input} resize-y`} value={p.desc} onChange={(e) => set((d) => ((d.piatti[i].desc = e.target.value), d))} />
-                  </Campo>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Prezzo label="Prezzo" value={p.price} onChange={(v) => set((d) => ((d.piatti[i].price = v), d))} />
-                    <Prezzo label="2° prezzo" placeholder="facoltativo" value={p.price2} onChange={(v) => set((d) => ((d.piatti[i].price2 = v), d))} />
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center justify-between gap-2 border-t border-blu-100 pt-3">
-                  <div className="flex gap-2">
-                    <Mini label="Sposta su" disabled={i === 0} onClick={() => set((d) => ((d.piatti = sposta(d.piatti, i, -1)), d))}>↑</Mini>
-                    <Mini label="Sposta giù" disabled={i === dati.piatti.length - 1} onClick={() => set((d) => ((d.piatti = sposta(d.piatti, i, 1)), d))}>↓</Mini>
-                  </div>
-                  <Mini
-                    danger
-                    label="Elimina piatto"
-                    onClick={() => {
-                      if (window.confirm(`Eliminare «${p.name || "questo piatto"}»?`)) set((d) => (d.piatti.splice(i, 1), d));
-                    }}
-                  >
-                    Elimina
-                  </Mini>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Sezione>
-
-        <Sezione titolo="Menù completo" sotto="La card blu in fondo ai piatti.">
-          <div className="flex flex-col gap-3">
-            <Campo label="Nome" max={LIMITI.nome} value={dati.menu.name}>
-              <input className={input} value={dati.menu.name} onChange={(e) => set((d) => ((d.menu.name = e.target.value), d))} />
-            </Campo>
-            <Campo label="Descrizione" max={LIMITI.desc} value={dati.menu.desc}>
-              <input className={input} value={dati.menu.desc} onChange={(e) => set((d) => ((d.menu.desc = e.target.value), d))} />
-            </Campo>
-            <div className="grid grid-cols-2 gap-3">
-              <Prezzo label="Prezzo" value={dati.menu.price} onChange={(v) => set((d) => ((d.menu.price = v), d))} />
-            </div>
-          </div>
-        </Sezione>
-
-        <Sezione
-          titolo="Contorni"
-          sotto="Tutti allo stesso prezzo."
-          azione={
-            <Mini
-              label="Aggiungi contorno"
-              disabled={dati.contorni.items.length >= LIMITI.contorni}
-              onClick={() => set((d) => (d.contorni.items.push({ id: nuovoId("contorno"), name: "", img: null }), d))}
-            >
-              + Contorno
-            </Mini>
-          }
-        >
-          <div className="mb-4 grid grid-cols-2 gap-3">
-            <Prezzo label="Prezzo dei contorni" value={dati.contorni.price} onChange={(v) => set((d) => ((d.contorni.price = v), d))} />
-          </div>
-          <ol className="flex flex-col gap-3">
-            {dati.contorni.items.map((c, i) => (
-              <li key={c.id} className="flex items-start gap-3 rounded-2xl border border-blu-100 p-3">
-                <Foto
-                  tonda
-                  img={c.img}
-                  password={password}
-                  onErrore={errore}
-                  onCarica={onCarica}
-                  onChange={(url) => set((d) => ((d.contorni.items[i].img = url), d))}
-                />
-                <div className="flex min-w-0 flex-1 flex-col gap-3">
-                  <Campo label="Nome" max={LIMITI.nome} value={c.name}>
-                    <input className={input} value={c.name} onChange={(e) => set((d) => ((d.contorni.items[i].name = e.target.value), d))} />
-                  </Campo>
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex gap-2">
-                      <Mini label="Sposta su" disabled={i === 0} onClick={() => set((d) => ((d.contorni.items = sposta(d.contorni.items, i, -1)), d))}>↑</Mini>
-                      <Mini label="Sposta giù" disabled={i === dati.contorni.items.length - 1} onClick={() => set((d) => ((d.contorni.items = sposta(d.contorni.items, i, 1)), d))}>↓</Mini>
-                    </div>
-                    <Mini
-                      danger
-                      label="Elimina contorno"
-                      onClick={() => {
-                        if (window.confirm(`Eliminare «${c.name || "questo contorno"}»?`)) set((d) => (d.contorni.items.splice(i, 1), d));
-                      }}
-                    >
-                      Elimina
-                    </Mini>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Sezione>
-
-        <p className="px-1 text-[0.78rem] leading-relaxed text-blu-700">
-          Le foto si ritagliano da sole: quelle dei piatti riempiono il riquadro, quelle dei contorni diventano tonde. Meglio
-          scattarle dall'alto, con il piatto al centro.
-        </p>
       </main>
 
       {/* barra di salvataggio */}
@@ -883,7 +589,7 @@ export default function PranzoAdmin() {
             }`}
           >
             {inCarico > 0
-              ? "Caricamento della foto…"
+              ? "Caricamento della locandina…"
               : modificato && stato.tipo !== "errore"
                 ? "Modifiche non salvate."
                 : stato.msg}

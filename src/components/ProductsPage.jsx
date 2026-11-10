@@ -2,8 +2,6 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CATEGORIES, PRODUCTS, INFO, ALLERGENI } from "../data/menu.js";
-import { isFotoCaricata, fotoPiccola } from "../data/pranzo.js";
-import { usePranzo } from "../lib/pranzo.js";
 import { useReveal } from "../lib/reveal.js";
 import PageOpener from "./PageOpener.jsx";
 import SiteFooter from "./SiteFooter.jsx";
@@ -14,16 +12,20 @@ gsap.registerPlugin(ScrollTrigger);
 /* ===========================================================================
    ProductsPage — "I nostri prodotti"
    ---------------------------------------------------------------------------
-   Una pagina sola, tre sezioni ancorate: Pranzo, Sfizi, Panini. Le tre sezioni
-   condividono lo stesso sistema di card ma non la stessa griglia, altrimenti
-   scorrendo sembrerebbero la stessa cosa tre volte:
+   Una pagina sola, tre sezioni ancorate: Sfizi, Panini, Bevande. Condividono
+   lo stesso sistema di card ma non la stessa griglia, altrimenti scorrendo
+   sembrerebbero la stessa cosa tre volte:
 
-     pranzo    tre colonne, con il menu completo su una card larga
      sfizi     quattro colonne compatte: sedici voci, e un banco, non un menu
      panini    due colonne grandi, perche sono quattro e meritano la foto
      bevande   nessuna card vera: sono cinque bottiglie allo stesso prezzo, non
                hanno niente da confrontare e lo slot orizzontale le lascerebbe
                minuscole in mezzo al vuoto
+
+   Fino al 10 novembre 2026 la prima sezione era il Pranzo (piatti, menù
+   completo, contorni), gestito dal cliente dalla dashboard: tolto
+   definitivamente su sua richiesta. Il vecchio indirizzo /pranzo porta a
+   questa pagina (vercel.json).
 
    Le foto dei prodotti arrivano dal cliente: finche il campo `img` in
    data/menu.js e null la card mostra un segnaposto disegnato invece di un buco,
@@ -31,58 +33,11 @@ gsap.registerPlugin(ScrollTrigger);
    =========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Card offerta: il menu completo. Niente slot immagine, fondo pieno, prezzo
-   grande. Serve anche a rompere il ritmo della griglia.
-   -------------------------------------------------------------------------- */
-function OfferCard({ item }) {
-  return (
-    <article
-      data-item
-      className="group relative isolate flex flex-col justify-center gap-6 overflow-hidden rounded-[26px] bg-blu-950 p-[clamp(20px,2.4vw,32px)] text-white shadow-[0_26px_54px_-36px_rgba(7,41,55,0.95)] transition-all duration-500 ease-hero hover:-translate-y-1.5 hover:shadow-[0_32px_62px_-32px_rgba(13,169,220,0.7)] sm:col-span-2 sm:flex-row sm:items-center sm:justify-between"
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-[12%] -bottom-[40%] -z-10 aspect-square w-[46%] transition-transform duration-700 ease-hero group-hover:scale-110"
-        style={{
-          borderRadius: "58% 42% 71% 29% / 38% 63% 37% 62%",
-          background:
-            "radial-gradient(closest-side, rgba(13,169,220,0.55), rgba(13,169,220,0.2) 55%, rgba(13,169,220,0) 100%)",
-        }}
-      />
-
-      <div className="min-w-0">
-        <span className="font-body text-[0.6rem] font-semibold tracking-[0.22em] text-blu-300 uppercase">
-          Il piu conveniente
-        </span>
-        <h3
-          className="mt-2 font-display font-extrabold text-white"
-          style={{ fontSize: "clamp(1.5rem,2.8vw,2.1rem)", lineHeight: 1.05, letterSpacing: "-0.035em" }}
-        >
-          {item.name}
-        </h3>
-        {item.desc && <p className="mt-2 max-w-[38ch] text-[0.92rem] leading-relaxed text-blu-200">{item.desc}</p>}
-      </div>
-
-      <p className="flex shrink-0 items-baseline gap-2">
-        <span className="font-body text-[0.64rem] font-semibold tracking-[0.16em] text-blu-300 uppercase">CHF</span>
-        <span
-          className="font-display font-extrabold text-white tabular-nums"
-          style={{ fontSize: "clamp(2.2rem,4vw,3.2rem)", lineHeight: 1, letterSpacing: "-0.04em" }}
-        >
-          {item.price}
-        </span>
-      </p>
-    </article>
-  );
-}
-
-/* --------------------------------------------------------------------------
    Card prodotto. Stessa anatomia per tutte, tre tagli diversi dello slot
    immagine: e quello che cambia il ritmo fra una sezione e l'altra.
    -------------------------------------------------------------------------- */
 function ProductCard({ item, glyph, variant }) {
-  const caricata = isFotoCaricata(item.img);
-  const sm = item.imgSm ?? fotoPiccola(item.img);
+  const sm = item.imgSm;
   const ratio = variant === "dense" ? "4 / 3" : variant === "showcase" ? "16 / 11" : "3 / 2";
 
   /* sizes deve dichiarare la larghezza VERA dello slot, che cambia con la
@@ -119,7 +74,7 @@ function ProductCard({ item, glyph, variant }) {
           }}
         />
 
-        {item.img && !caricata && (
+        {item.img && (
           <span
             aria-hidden="true"
             className="absolute bottom-[12%] left-1/2 h-[9%] w-[54%] -translate-x-1/2 rounded-[50%]"
@@ -130,18 +85,7 @@ function ProductCard({ item, glyph, variant }) {
           />
         )}
 
-        {caricata ? (
-          /* foto caricata dal cliente dalla dashboard: e una foto vera, col
-             suo sfondo, quindi riempie il riquadro */
-          <img
-            src={item.img}
-            sizes={sizes}
-            alt={item.name}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-hero group-hover:scale-[1.04]"
-          />
-        ) : item.img ? (
+        {item.img ? (
           <img
             src={item.img}
             {...(sm ? { srcSet: `${sm} 680w, ${item.img} 1200w` } : {})}
@@ -193,16 +137,6 @@ function ProductCard({ item, glyph, variant }) {
           >
             {item.price}
           </span>
-          {item.price2 && (
-            <>
-              <span aria-hidden="true" className="text-blu-300">
-                /
-              </span>
-              <span className="font-body text-[1.05rem] font-semibold text-blu-700 tabular-nums">
-                {item.price2}
-              </span>
-            </>
-          )}
         </p>
       </div>
     </article>
@@ -360,121 +294,10 @@ function PaniniMenu({ items }) {
 }
 
 /* --------------------------------------------------------------------------
-   Contorni: il pannello chiaro che chiude la sezione pranzo.
-   Sette voci allo stesso prezzo, come le bevande: niente da confrontare, quindi
-   niente card. Le foto sono ciotole viste dall'alto, grandi, tre per riga (lo
-   ha chiesto il cliente). Flex e non grid, cosi l'ultima riga incompleta resta
-   centrata invece di lasciare un buco a destra (7 = 3+3+1, 2+2+2+1).
-   -------------------------------------------------------------------------- */
-function Contorni({ data }) {
-  if (!data.items.length) return null;
-  return (
-    <div
-      data-item
-      className="relative isolate mt-4 overflow-hidden rounded-[30px] border border-blu-100 bg-blu-50 p-[clamp(22px,3vw,42px)] sm:mt-5"
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-[34%] -left-[10%] -z-10 aspect-square w-[40%]"
-        style={{
-          borderRadius: "58% 42% 71% 29% / 38% 63% 37% 62%",
-          background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 55%, rgba(255,255,255,0) 100%)",
-        }}
-      />
-
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="flex items-center gap-3">
-            <span aria-hidden="true" className="block h-px w-8 bg-blu-500" />
-            <span className="font-body text-[0.62rem] font-semibold tracking-[0.22em] text-blu-700 uppercase">
-              Dal banco
-            </span>
-          </p>
-          <h3
-            className="mt-2 font-display font-extrabold text-blu-800"
-            style={{ fontSize: "clamp(1.6rem,3.4vw,2.6rem)", lineHeight: 1, letterSpacing: "-0.035em" }}
-          >
-            Contorni
-          </h3>
-        </div>
-        <p className="max-w-[40ch] text-[0.92rem] leading-relaxed text-blu-800 md:text-right">
-          {data.items.length === 1 ? "1 contorno, a" : `${data.items.length} contorni, tutti a`}{" "}
-          <span className="font-semibold text-blu-950 tabular-nums">{data.price} CHF</span>.
-        </p>
-      </div>
-
-      <ul className="-mx-2 mt-[clamp(24px,4vh,44px)] flex flex-wrap justify-center gap-y-[clamp(24px,4vh,44px)] sm:-mx-4">
-        {data.items.map((item) => (
-          <li
-            key={item.id}
-            className="group flex basis-1/2 flex-col items-center px-2 text-center sm:basis-1/3 sm:px-4"
-          >
-            <div className="relative aspect-square w-full max-w-[340px]">
-              {isFotoCaricata(item.img) ? (
-                /* foto caricata dal cliente: la ciotola la fa il CSS, un
-                   cerchio col bordo bianco della stessa misura di quelle
-                   disegnate */
-                <span className="absolute inset-[4.5%] overflow-hidden rounded-full border-[6px] border-white bg-white shadow-[0_14px_28px_-14px_rgba(7,41,55,0.55)] ring-1 ring-blu-200 transition-transform duration-700 ease-hero group-hover:scale-[1.04] sm:border-[10px]">
-                  <img
-                    src={item.img}
-                    sizes="(min-width: 1280px) 340px, (min-width: 640px) 30vw, 46vw"
-                    alt={item.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                </span>
-              ) : item.img ? (
-                <img
-                  src={item.img}
-                  {...(fotoPiccola(item.img) ? { srcSet: `${fotoPiccola(item.img)} 680w, ${item.img} 1200w` } : {})}
-                  sizes="(min-width: 1280px) 340px, (min-width: 640px) 30vw, 46vw"
-                  alt={item.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 ease-hero group-hover:scale-[1.04] group-hover:-rotate-[10deg]"
-                />
-              ) : (
-                <span className="absolute inset-[4.5%] flex items-center justify-center rounded-full border-[6px] border-white bg-blu-100 shadow-[0_14px_28px_-14px_rgba(7,41,55,0.45)] sm:border-[10px]">
-                  <CategoryGlyph kind="pot" className="h-[38%] w-[38%] text-blu-300" />
-                </span>
-              )}
-            </div>
-            <p
-              className="mt-3 font-display text-[clamp(0.98rem,1.5vw,1.25rem)] font-extrabold text-blu-950"
-              style={{ fontStretch: "92%", lineHeight: 1.15, textWrap: "balance" }}
-            >
-              {item.name}
-            </p>
-            <p className="mt-1.5 flex items-baseline gap-1.5">
-              <span className="font-body text-[0.6rem] font-semibold tracking-[0.14em] text-blu-700 uppercase">
-                CHF
-              </span>
-              <span className="font-body text-[1.08rem] font-semibold text-blu-950 tabular-nums">
-                {data.price}
-              </span>
-            </p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/* --------------------------------------------------------------------------
    Sezione di categoria: testata editoriale + griglia.
    -------------------------------------------------------------------------- */
-function CategorySection({ cat, pranzo }) {
-  /* il pranzo arriva dalla dashboard del cliente: i piatti, poi il menù
-     completo (la card blu larga), poi il pannello dei contorni */
-  const isPranzo = cat.id === "pranzo";
-  const items = isPranzo
-    ? [...pranzo.piatti, { id: "menu-pranzo", featured: true, ...pranzo.menu }]
-    : PRODUCTS[cat.id];
-  const lead = isPranzo && pranzo.lead ? pranzo.lead : cat.lead;
-  /* i contorni stanno nel loro pannello ma sono voci in carta del pranzo */
-  const count = items.length + (isPranzo ? pranzo.contorni.items.length : 0);
+function CategorySection({ cat }) {
+  const items = PRODUCTS[cat.id];
   const grid =
     cat.layout === "dense"
       ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
@@ -524,13 +347,13 @@ function CategorySection({ cat, pranzo }) {
 
         <div className="md:max-w-[38ch] md:text-right">
           <p data-item className="text-[0.95rem] leading-relaxed text-blu-800">
-            {lead}
+            {cat.lead}
           </p>
           <p
             data-item
             className="mt-3 font-body text-[0.68rem] font-semibold tracking-[0.16em] text-blu-700 uppercase tabular-nums"
           >
-            {count} voci in carta
+            {items.length} voci in carta
           </p>
         </div>
       </div>
@@ -539,17 +362,13 @@ function CategorySection({ cat, pranzo }) {
         {items.map((item) =>
           cat.layout === "lista" ? (
             <DrinkCard key={item.id} item={item} />
-          ) : item.featured ? (
-            <OfferCard key={item.id} item={item} />
           ) : (
             <ProductCard key={item.id} item={item} glyph={cat.glyph} variant={cat.layout} />
           )
         )}
       </div>
 
-      {/* i contorni chiudono il pranzo, i panini menù la sezione panini, come
-          sul sito del cliente */}
-      {isPranzo && <Contorni data={pranzo.contorni} />}
+      {/* i panini menù chiudono la sezione panini, come sul sito del cliente */}
       {cat.id === "panini" && <PaniniMenu items={items} />}
     </section>
   );
@@ -559,15 +378,13 @@ function CategorySection({ cat, pranzo }) {
 
 export default function ProductsPage() {
   const root = useRef(null);
-  const pranzo = usePranzo();
 
-  /* Arrivo con un'ancora (#panini, e i vecchi indirizzi /pranzo,
-     /i-nostri-sfizi e /paninoteca che vercel.json rimanda qui): il browser
-     cerca la sezione quando finisce di leggere l'HTML, ma React la disegna un
-     attimo dopo, e il salto non avveniva mai. Va fatto qui, prima di useReveal,
-     che deve vedere la pagina gia nella posizione giusta. Poi la pagina si
-     assesta ancora (i font, il pranzo letto dall'archivio che cambia l'altezza
-     della prima sezione): per due secondi e mezzo la sezione resta agganciata,
+  /* Arrivo con un'ancora (#panini, e i vecchi indirizzi /i-nostri-sfizi e
+     /paninoteca che vercel.json rimanda qui): il browser cerca la sezione
+     quando finisce di leggere l'HTML, ma React la disegna un attimo dopo, e il
+     salto non avveniva mai. Va fatto qui, prima di useReveal, che deve vedere
+     la pagina gia nella posizione giusta. Poi la pagina si assesta ancora (i
+     font che arrivano): per due secondi e mezzo la sezione resta agganciata,
      a meno che chi legge non tocchi qualcosa prima. */
   useLayoutEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
@@ -626,7 +443,7 @@ export default function ProductsPage() {
           eyebrow="Il banco di Viganello"
           title="I nostri prodotti"
           script="tutto quello che esce dalla cucina"
-          lead="Il fritto napoletano, i panini con la provola e i primi del pranzo. Preparato al momento, da mangiare qui o da farsi portare a casa entro otto chilometri."
+          lead="Il fritto napoletano e i panini con la provola, con le bibite fredde. Preparato al momento, da mangiare qui o da farsi portare a casa entro otto chilometri."
         >
           <ul data-item className="mt-[clamp(20px,3vh,34px)] flex flex-wrap gap-2.5">
             {CATEGORIES.map((c) => (
@@ -671,7 +488,7 @@ export default function ProductsPage() {
 
         <div className="mx-auto w-full max-w-[1440px] px-[clamp(20px,5vw,72px)]">
           {CATEGORIES.map((cat) => (
-            <CategorySection key={cat.id} cat={cat} pranzo={pranzo} />
+            <CategorySection key={cat.id} cat={cat} />
           ))}
 
           {/* L'avviso che sul sito del cliente chiude ogni pagina del menu.

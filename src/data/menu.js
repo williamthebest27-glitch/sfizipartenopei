@@ -18,16 +18,9 @@
    =========================================================================== */
 
 export const CATEGORIES = [
-  {
-    id: "pranzo",
-    name: "Pranzo",
-    script: "il piatto del giorno",
-    eyebrow: "Solo a pranzo · Lun–Sab",
-    lead: "Primi e secondi serviti a mezzogiorno, finché ci sono. Il menù completo mette insieme il primo e la bibita.",
-    ink: "text-blu-800",
-    glyph: "pot",
-    layout: "wide",
-  },
+  /* Fino al 10 novembre 2026 qui c'era anche il Pranzo (piatti del giorno,
+     menù completo, contorni), gestito dal cliente dalla dashboard: tolto
+     definitivamente su sua richiesta. */
   {
     id: "sfizi",
     name: "Sfizi",
@@ -53,7 +46,7 @@ export const CATEGORIES = [
     name: "Bevande",
     script: "da bere, sempre fredde",
     eyebrow: "Tutte a 3.00",
-    lead: "Acqua, bibite e birra svizzera. È la stessa bibita del menù completo a pranzo e dei panini menù.",
+    lead: "Acqua, bibite e birra svizzera. È la stessa bibita dei panini menù.",
     ink: "text-blu-600",
     glyph: "drink",
     layout: "lista",
@@ -61,9 +54,6 @@ export const CATEGORIES = [
 ];
 
 export const PRODUCTS = {
-  /* pranzo: non sta qui. Lo modifica il cliente dalla dashboard, vedi
-     data/pranzo.js e lib/pranzo.js. */
-
   sfizi: [
     { id: "arancino", name: "Arancino bolognese", desc: "Riso e ragu, impanato e fritto.", price: "4.00", img: "img/prodotti/arancino.webp", imgSm: "img/prodotti/arancino-sm.webp" },
     { id: "mozzarella-carrozza", name: "Mozzarella in carrozza", desc: "Mozzarella fra due fette di pane, fritta.", price: "4.50", img: "img/prodotti/mozzarella-carrozza.webp", imgSm: "img/prodotti/mozzarella-carrozza-sm.webp" },

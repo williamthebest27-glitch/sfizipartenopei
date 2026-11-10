@@ -24,7 +24,7 @@ import { CookieGlyph, CloseGlyph, ArrowGlyph } from "./glyphs.jsx";
 
    Sulla home aspetta il sipario (lib/intro.js) e poi ancora un attimo, cosi
    non entra in scena insieme al titolo della hero. Lo monta SiteFooter, quindi
-   c'e su tutte le pagine pubbliche e non nella dashboard del pranzo.
+   c'e su tutte le pagine pubbliche e non nella dashboard (/gestione).
    =========================================================================== */
 
 const RITARDO = 1400; // ms dopo l'apertura del sito

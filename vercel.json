@@ -6,7 +6,7 @@
   "redirects": [
     {
       "source": "/pranzo",
-      "destination": "/i-nostri-prodotti#pranzo",
+      "destination": "/i-nostri-prodotti",
       "permanent": true
     },
     {
@@ -18,12 +18,11 @@
       "source": "/paninoteca",
       "destination": "/i-nostri-prodotti#panini",
       "permanent": true
-    }
-  ],
-  "rewrites": [
+    },
     {
-      "source": "/gestione",
-      "destination": "/gestione-pranzo"
+      "source": "/gestione-pranzo",
+      "destination": "/gestione",
+      "permanent": true
     }
   ],
   "headers": [

@@ -85,7 +85,7 @@ export default {
             cancellati automaticamente dopo un breve periodo, secondo le regole del fornitore.
           </p>
           <p>
-            Il menu del pranzo viene caricato dal nostro server quando apri la pagina dei prodotti: è una
+            La locandina delle offerte in evidenza viene caricata dal nostro server quando apri la home: è una
             richiesta tecnica come le altre e non raccoglie dati su di te.
           </p>
         </>
@@ -197,7 +197,7 @@ export default {
             <li>
               <strong>Vercel Inc.</strong>, 440 N Barranca Avenue #4133, Covina, CA 91723, Stati Uniti: hosting
               del sito. Le pagine sono distribuite da una rete di server in più paesi; le funzioni del server (come
-              il menu del pranzo) girano nella regione di Francoforte, in Germania.{" "}
+              la locandina delle offerte in evidenza) girano nella regione di Francoforte, in Germania.{" "}
               <Esterno href="https://vercel.com/legal/privacy-policy">Privacy policy di Vercel</Esterno>.
             </li>
             <li>

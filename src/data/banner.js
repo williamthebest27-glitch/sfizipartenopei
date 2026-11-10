@@ -11,7 +11,7 @@
    in public/img/eventi/. Dopo la data «fino» si spegne da solo.
 
    pulisciBanner() e la stessa validazione per il server (prima di salvare) e
-   per la dashboard (prima di inviare), come pulisciPranzo().
+   per la dashboard (prima di inviare).
    =========================================================================== */
 
 export const BANNER_DEFAULT = {

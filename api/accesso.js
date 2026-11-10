@@ -1,4 +1,4 @@
-/* /api/pranzo-accesso
+/* /api/accesso
    POST: controlla la password della dashboard senza salvare niente. */
 import { autorizzato, json, negato } from "./_comune.js";
 

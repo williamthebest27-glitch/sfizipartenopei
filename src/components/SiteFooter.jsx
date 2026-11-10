@@ -31,7 +31,7 @@ const qui =
   typeof window === "undefined" ? "" : window.location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
 
 /* Il banner dei cookie vive qui accanto al pie perche il pie c'e su tutte le
-   pagine pubbliche e solo su quelle: la dashboard del pranzo non lo monta. */
+   pagine pubbliche e solo su quelle: la dashboard (/gestione) non lo monta. */
 export default function SiteFooter() {
   return (
     <>

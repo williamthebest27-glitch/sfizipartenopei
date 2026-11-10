@@ -23,7 +23,9 @@ const TEL_LABEL = "078 406 56 76";
 /* Tre pagine, non cinque: pranzo, sfizi e panini erano tre pagine separate sul
    sito Webador, qui sono tre sezioni ancorate dentro "I nostri prodotti" (i
    vecchi indirizzi /pranzo, /i-nostri-sfizi e /paninoteca ci portano con un
-   redirect, vedi vercel.json). Gli href sono gli indirizzi puliti, senza
+   redirect, vedi vercel.json). Il pranzo e stato poi tolto del tutto il 10
+   novembre 2026: /pranzo porta alla pagina prodotti.
+   Gli href sono gli indirizzi puliti, senza
    .html: li serve cleanUrls su Vercel, e in locale il server di Vite. */
 const NAV = [
   { label: "Home", short: "Home", href: "/" },

@@ -5,7 +5,7 @@ import { PulsantePreferenze, Righe, StatoConsenso } from "./LegalPage.jsx";
    ---------------------------------------------------------------------------
    L'elenco qui sotto e l'inventario completo di quello che il sito salva nel
    browser, verificato sul codice: lib/consenso.js, Sipario.jsx e
-   PranzoAdmin.jsx. Nessun cookie vero e proprio, solo localStorage e
+   lib/evento.js, GestioneSito.jsx. Nessun cookie vero e proprio, solo localStorage e
    sessionStorage. Chi aggiunge uno strumento (statistiche, pixel, mappe
    incorporate) aggiunge qui la sua voce e alza VERSIONE in lib/consenso.js.
    =========================================================================== */
@@ -33,12 +33,24 @@ const VOCI = [
     ],
   },
   {
-    nome: "sfizi-pranzo-pw",
+    nome: "sfizi:evento-visto",
     righe: [
       ["Tipo", "Memoria di sessione (sessionStorage)"],
       [
         "A cosa serve",
-        "Solo nell'area di gestione riservata al personale: mantiene l'accesso per aggiornare il menu del pranzo. Non viene mai creata per i visitatori.",
+        "Ricorda che hai già visto la locandina in evidenza sulla home, per non riproportela ogni volta che ci torni.",
+      ],
+      ["Durata", "Fino alla chiusura della scheda"],
+      ["Categoria", "Necessario"],
+    ],
+  },
+  {
+    nome: "sfizi-gestione-pw",
+    righe: [
+      ["Tipo", "Memoria di sessione (sessionStorage)"],
+      [
+        "A cosa serve",
+        "Solo nell'area di gestione riservata al personale: mantiene l'accesso per aggiornare la locandina in evidenza della home. Non viene mai creata per i visitatori.",
       ],
       ["Durata", "Fino alla chiusura della scheda"],
       ["Categoria", "Necessario"],
@@ -53,7 +65,7 @@ export default {
   lead: "Cosa salva il sito nel tuo browser, a cosa serve e come puoi scegliere. La risposta breve: pochissimo, e niente che serva a seguirti.",
   sommario: [
     "Nessun cookie pubblicitario, di profilazione o di terze parti.",
-    "Nel tuo browser salviamo solo due informazioni tecniche: le tue scelte sui cookie e se hai già visto l'animazione d'apertura.",
+    "Nel tuo browser salviamo solo tre informazioni tecniche: le tue scelte sui cookie, se hai già visto l'animazione d'apertura e se hai già visto la locandina in evidenza.",
     "Statistiche e marketing oggi non sono attivi; se li aggiungeremo, partiranno solo con il tuo consenso.",
     "Puoi cambiare le tue scelte quando vuoi, da «Gestisci cookie» in fondo a ogni pagina.",
   ],
