@@ -78,11 +78,17 @@ const SCENES = [
   },
   {
     id: "menu",
-    /* Una frase, non una parola: due righe composte allo stesso corpo. */
-    word: ["Menù e piatti", "del giorno"],
-    span: 84,
-    spanMd: 56,
-    spanLg: 52,
+    word: "Menù",
+    /* Quattro lettere larghe (la M da sola vale quasi due lettere medie):
+       MENU riempie il 125% della campata che fitWidth le assegna, quindi le
+       campate sono piu strette di quelle delle altre due parole. */
+    span: 49,
+    spanMd: 35,
+    spanLg: 36.5,
+    /* Sul telefono l'accento della U sale sopra la riga e arrivava a 7 px
+       dal filo del menu: la parola scende di 8 px, e resta comunque piu
+       corta di PANINI, che e quella che decide dove comincia la foto. */
+    pad: "max-md:pt-2",
     name: "Menù completo",
     price: "15.00",
     kicker: "Paninoteca",
@@ -106,8 +112,8 @@ const WORD_CAP_TEL = 0.45;
    allinea a sinistra, sulla stessa linea del testo sotto, e arriva fin quasi
    al prodotto senza toccarlo. Le campate sono per scena perche WORD_EM e una
    media: SFIZI, tutta maiuscole strette, riempie il 77% della sua campata,
-   PANINI il 93%, MENU E PIATTI l'89%. Verificate misurando le due sagome da
-   1024 a 1920 px. */
+   PANINI il 93%, MENU il 125%. Verificate misurando le due sagome da 1024 a
+   1920 px: tutte e tre le parole finiscono al 46% della larghezza. */
 const WORD_SPAN_LG = 49;
 /* Tablet: la parola sta sopra il prodotto, quindi qui il vincolo e l'altezza.
    Un po' piu piccola che sul telefono, cosi il prodotto ci sta sotto intero. */
@@ -436,8 +442,9 @@ export default function Showcase() {
           {SCENES.map((sc, i) => {
             /* Una parola sola o una frase su piu righe. Il corpo si ricava
                dalla riga PIU LUNGA e vale per tutte: dando a ogni riga la sua
-               larghezza piena, come si fa con le parole singole, "MENU"
-               verrebbe alto il triplo di "DEL GIORNO". */
+               larghezza piena, come si fa con le parole singole, una riga
+               corta verrebbe alta il triplo di una lunga. Oggi le tre scene
+               hanno una parola sola; la frase su due righe resta possibile. */
             const righe = Array.isArray(sc.word) ? sc.word : [sc.word];
             const lunga = righe.reduce((a, b) => (b.length > a.length ? b : a));
 
@@ -446,7 +453,7 @@ export default function Showcase() {
                 key={sc.id}
                 data-scene
                 {...(i > 0 ? { "data-alt": "" } : {})}
-                className="absolute inset-x-0 top-[max(118px,14svh)] text-center md:top-[16%] md:pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] md:text-left lg:top-[15%]"
+                className={`absolute inset-x-0 top-[max(118px,14svh)] text-center md:top-[16%] md:pl-[calc(max(0px,(100%_-_1440px)/2)_+_clamp(20px,5vw,72px))] md:text-left lg:top-[15%] ${sc.pad ?? ""}`}
               >
                 <span
                   data-word
